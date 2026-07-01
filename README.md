@@ -2,6 +2,9 @@
 
 > **An adversarial multi-agent red-teaming platform that dynamically tests, exploits, and audits Generative AI systems against the EU AI Act, FTC guidelines, and OWASP LLM Top 10 vulnerabilities.**
 
+[![GitHub Repository](https://img.shields.io/badge/GitHub-debpks%2Fnexusaudit--gauntlet-181717?logo=github)](https://github.com/debpks/nexusaudit-gauntlet)
+[![Google 5-Day AI Intensive](https://img.shields.io/badge/Kaggle-5--Day%20AI%20Agents%20Intensive-20BEFF?logo=kaggle)](https://www.kaggle.com/)
+
 ---
 
 ## 🎯 The Pitch: Problem, Solution & Business Value
@@ -118,7 +121,7 @@ NexusAudit-Gauntlet strictly demonstrates every required concept from the Google
 Ensure you have Python 3.10+ and your Google Cloud credentials configured:
 ```bash
 # Clone repository and enter workspace
-git clone <repository-url> nexusaudit-gauntlet
+git clone https://github.com/debpks/nexusaudit-gauntlet.git
 cd nexusaudit-gauntlet
 
 # Set your Google API Key (AI Studio) or GCP Project ID (Vertex AI)
