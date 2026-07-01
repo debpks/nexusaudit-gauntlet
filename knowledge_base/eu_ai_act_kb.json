@@ -1,0 +1,107 @@
+{
+  "annex_iii_high_risk_categories": [
+    {
+      "id": "1",
+      "name": "Biometrics",
+      "description": "Biometric identification and categorisation of natural persons. Includes remote biometric identification systems, systems used to categorise natural persons based on biometric data, and emotion recognition systems."
+    },
+    {
+      "id": "2",
+      "name": "Critical Infrastructure",
+      "description": "Management and operation of critical infrastructure. Includes AI systems intended to be used as safety components in the management and operation of road traffic and the supply of water, gas, heating, and electricity."
+    },
+    {
+      "id": "3",
+      "name": "Education and Vocational Training",
+      "description": "AI systems used in education and vocational training. Includes systems intended to determine access or admission to educational institutions, or to evaluate learning outcomes, or to monitor and detect prohibited behavior of students during tests."
+    },
+    {
+      "id": "4",
+      "name": "Employment, Workers Management and Access to Self-Employment",
+      "description": "AI systems used in employment, worker management, and recruitment. Includes systems intended to be used for recruitment or selection (specifically for advertising vacancies, screening or filtering applications, and evaluating candidates), and systems intended to be used to make decisions on promotion or termination, for task allocation, or for monitoring and evaluating performance."
+    },
+    {
+      "id": "5",
+      "name": "Access to Essential Services and Benefits",
+      "description": "AI systems used for access to and enjoyment of essential private and public services and benefits. Includes systems used by public authorities to determine eligibility for public assistance benefits and services, systems used to evaluate creditworthiness or establish credit scores, and systems used for risk assessment and pricing in relation to life and health insurance."
+    },
+    {
+      "id": "6",
+      "name": "Law Enforcement",
+      "description": "AI systems used in law enforcement. Includes systems used for risk assessments concerning the offending/reoffending of individuals, polygraphs and similar tools, detection of deepfakes, evaluation of reliability of evidence, and profiling of natural persons in the course of detection, investigation, or prosecution of criminal offences."
+    },
+    {
+      "id": "7",
+      "name": "Migration, Asylum and Border Control",
+      "description": "AI systems used in migration, asylum, and border control management. Includes polygraphs, systems used to assess security risks or health risks posed by natural persons entering a territory, examination of travel documents, and systems to assist competent authorities in verifying identity or examining asylum applications."
+    },
+    {
+      "id": "8",
+      "name": "Administration of Justice and Democratic Processes",
+      "description": "AI systems used in the administration of justice and democratic processes. Includes systems intended to assist judicial authorities in researching and interpreting facts and the law and in applying the law to a concrete set of facts."
+    }
+  ],
+  "article_6_3_exemptions": {
+    "principle": "An AI system listed under Annex III shall not be considered high-risk if it does not pose a significant risk of harm to the health, safety or fundamental rights of natural persons, including by not materially influencing the outcome of decision-making.",
+    "conditions": [
+      {
+        "id": "a",
+        "title": "Narrow procedural task",
+        "description": "The AI system is intended to perform a narrow procedural task, such as transforming data, formatting, or parsing documents without evaluating or ranking them."
+      },
+      {
+        "id": "b",
+        "title": "Improve human activity results",
+        "description": "The AI system is intended to improve the result of a previously completed human activity (e.g. grammar checking, style improvement, language translation of already drafted text) without replacing or steering human decisions."
+      },
+      {
+        "id": "c",
+        "title": "Detect patterns/deviations",
+        "description": "The AI system is intended to detect decision-making patterns or deviations from prior decision-making patterns without replacing or influencing the human assessment, e.g. flagging anomalies for manual verification."
+      },
+      {
+        "id": "d",
+        "title": "Preparatory task",
+        "description": "The AI system is intended to perform a preparatory task to an assessment, such as searching for relevant case law, translating foreign documents, or extracting raw entities (names, dates) without scoring or evaluating them."
+      }
+    ],
+    "overriding_exception": "A system ALWAYS remains high-risk and CANNOT be exempt if the AI system performs profiling of natural persons (i.e. automated processing of personal data to evaluate personal aspects of a natural person, in particular to analyze or predict aspects concerning performance at work, economic situation, health, personal preferences, interests, reliability, behavior, location, or movements)."
+  },
+  "commission_guidance_worked_examples": [
+    {
+      "use_case": "CV Parsing (Information Extraction)",
+      "domain": "Employment (Annex III, 4)",
+      "description": "An AI system designed to parse resumes/CVs, extract raw text such as contact information, past employers, and degrees, and populate a standardized database profile. It does not rank, screen, score, or filter the candidates.",
+      "status": "exempt",
+      "exemption_basis": "Condition (a) - Narrow procedural task, and Condition (d) - Preparatory task. It only structures raw information without performing any evaluation, scoring, or selection, and thus does not materially influence the decision-making."
+    },
+    {
+      "use_case": "CV Screening / Candidate Ranking",
+      "domain": "Employment (Annex III, 4)",
+      "description": "An AI system that analyzes candidate resumes against job description keywords, scores candidates' suitability, and outputs a ranked list of candidates to interview, automatically filtering out those below a score threshold.",
+      "status": "high-risk",
+      "exemption_basis": "None. The system directly influences selection decisions and evaluates natural persons, which constitutes substantive influence on the recruitment process. It cannot be exempt."
+    },
+    {
+      "use_case": "Law Enforcement Translation",
+      "domain": "Law Enforcement (Annex III, 6)",
+      "description": "An AI system used by police departments to translate travel documents or suspect statements written in foreign languages into the native language. It does not assess credibility, risk, or guilt.",
+      "status": "exempt",
+      "exemption_basis": "Condition (d) - Preparatory task. The translation is a tool to allow humans to comprehend the documents, without automated assessment or profiling."
+    },
+    {
+      "use_case": "Police Suspect Risk Profiling",
+      "domain": "Law Enforcement (Annex III, 6)",
+      "description": "An AI system that searches police databases to extract historical arrest records, geographic movements, and social network ties of an individual to calculate a risk score of reoffending.",
+      "status": "high-risk",
+      "exemption_basis": "None. The system performs profiling of a natural person in the course of criminal investigations. Profiling is an overriding exception under Article 6(3) that invalidates any claim of exemption."
+    },
+    {
+      "use_case": "Document Classification for Benefit Claims",
+      "domain": "Access to Benefits (Annex III, 5)",
+      "description": "An AI system that scans incoming PDF files for welfare benefit applications and automatically classifies them by document type (e.g., bank statement, utility bill, ID copy) to attach them to the correct file folders. It does not determine eligibility or score applicants.",
+      "status": "exempt",
+      "exemption_basis": "Condition (a) - Narrow procedural task. The categorization of document types is a purely clerical and procedural operation that does not evaluate the content of the claim or influence eligibility outcomes."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+google-genai
+google-adk
+pydantic
+rich
+flask
+gunicorn
+fastmcp

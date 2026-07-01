@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaMart ShopBot — Multi-Agent Audit Sandbox</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-base: #0B0E14;
+            --bg-surface: rgba(22, 28, 45, 0.45);
+            --bg-card: rgba(30, 41, 59, 0.7);
+            
+            --border-glow: rgba(99, 102, 241, 0.15);
+            --border-hover: rgba(99, 102, 241, 0.4);
+            
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            
+            --accent-indigo: #6366F1;
+            --accent-purple: #8B5CF6;
+            --accent-blue: #00d2ff;
+            
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --error-color: #EF4444;
+            
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-code: 'Fira Code', monospace;
+            
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
+        }
+
+        header {
+            padding: 0.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(11, 14, 20, 0.8);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .logo-text h1 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #FFFFFF, var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 1rem auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 0 2rem 2rem 2rem;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .panel {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .panel-header {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.4rem 1rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        
+        .start-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+        
+        .start-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--bg-surface);
+            box-shadow: none;
+            color: var(--text-muted);
+        }
+
+        select {
+            background: rgba(15,23,42,0.8);
+            border: 1px solid var(--border-glow);
+            color: var(--text-primary);
+            padding: 0.4rem;
+            border-radius: 8px;
+            font-family: var(--font-body);
+            width: 400px;
+            outline: none;
+        }
+
+        .agents-visualizer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .agent-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 2;
+            transition: var(--transition-smooth);
+            opacity: 0.4;
+        }
+
+        .agent-node.active {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .agent-icon {
+            width: 35px;
+            height: 35px;
+            background: var(--bg-surface);
+            border: 2px solid var(--border-glow);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .agent-node.active .agent-icon {
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .target-node .agent-icon { border-color: rgba(239, 68, 68, 0.3); }
+        .target-node.active .agent-icon {
+            border-color: var(--error-color);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .agent-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .connector {
+            flex: 1;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 1;
+            margin: 0 -10px;
+        }
+
+        .terminal-panel {
+            flex: 1;
+            min-height: 0;
+        }
+
+        .terminal {
+            background: #000;
+            border-radius: 8px;
+            padding: 1.5rem;
+            flex: 1;
+            height: auto;
+            overflow-y: auto;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #d1d5db;
+        }
+
+        .terminal span.sys { color: var(--accent-indigo); }
+        .terminal span.agent { color: #A78BFA; }
+        .terminal span.target { color: var(--error-color); }
+        .terminal span.succ { color: var(--success-color); font-weight: bold; }
+        .terminal span.err { color: var(--error-color); font-weight: bold; }
+        .terminal span.warn { color: var(--warning-color); font-weight: bold; }
+        .terminal span.dim { color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon">Ω</div>
+            <div class="logo-text">
+                <h1>NovaMart ShopBot</h1>
+                <p>Multi-Agent Auditing Platform</p>
+            </div>
+        </div>
+        <nav style="display: flex; gap: 2rem; font-family: var(--font-body); font-weight: 500;">
+            <a href="/" style="color: var(--accent-indigo); text-decoration: none; transition: var(--transition-smooth);">Live Demo</a>
+            <a href="/about" style="color: var(--text-secondary); text-decoration: none; transition: var(--transition-smooth);" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">About</a>
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Agent Flow Visualizer & Controls -->
+        <div class="panel" style="position: sticky; top: 60px; z-index: 50; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <div class="panel-header">
+                <span>Adversarial Escalation Loop</span>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <select id="policy-dropdown" onchange="selectScenario(this.value)">
+                        <option value="" disabled selected>-- Select Policy to Audit --</option>
+                        {% for key, scenario in scenarios.items() %}
+                        <option value="{{ key }}">{{ scenario.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button class="start-btn" id="start-btn" onclick="startDemo()" disabled>Run Audit</button>
+                </div>
+            </div>
+            
+            <div class="agents-visualizer">
+                <div class="agent-node" id="node-Parser">
+                    <div class="agent-icon">📜</div>
+                    <div class="agent-label">Parser</div>
+                </div>
+                <div class="connector"></div>
+                <div class="agent-node" id="node-Modeler">
+                    <div class="agent-icon">🎯</div>
+                    <div class="agent-label">Modeler</div>
+                </div>
+                <div class="connector"></div>
+                <div class="agent-node" id="node-Simulator">
+                    <div class="agent-icon">⚔️</div>
+                    <div class="agent-label">Simulator</div>
+                </div>
+                <div class="connector"></div>
+                <div class="agent-node target-node" id="node-Target">
+                    <div class="agent-icon">🤖</div>
+                    <div class="agent-label">Live Bot</div>
+                </div>
+                <div class="connector"></div>
+                <div class="agent-node" id="node-Evaluator">
+                    <div class="agent-icon">⚖️</div>
+                    <div class="agent-label">Evaluator</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Terminal Output -->
+        <div class="panel terminal-panel">
+            <div class="panel-header" style="font-family: var(--font-code); font-size: 1rem; border-bottom: none; padding-bottom: 0;">
+                Live Output Trace
+            </div>
+            <div class="terminal" id="terminal-output">Select a policy and click 'Run Audit' to begin...</div>
+        </div>
+    </div>
+
+    <script>
+        let currentScenarioId = null;
+        let eventSource = null;
+
+        function selectScenario(id) {
+            currentScenarioId = id;
+            document.getElementById('start-btn').disabled = false;
+            logToTerminal(`\n<span class="sys">[SYSTEM]</span> Policy selected: ${id}. Ready to deploy adversarial agents.`, true);
+        }
+
+        function setActiveAgent(agentName) {
+            document.querySelectorAll('.agent-node').forEach(el => el.classList.remove('active'));
+            if(agentName && document.getElementById('node-' + agentName)) {
+                document.getElementById('node-' + agentName).classList.add('active');
+            }
+        }
+
+        function logToTerminal(htmlMsg, clear=false) {
+            const term = document.getElementById('terminal-output');
+            if(clear) term.innerHTML = '';
+            term.innerHTML += htmlMsg + '\n';
+            term.scrollTop = term.scrollHeight;
+        }
+
+        function startDemo() {
+            if(!currentScenarioId) return;
+            
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('policy-dropdown').disabled = true;
+            logToTerminal('', true);
+            
+            if(eventSource) eventSource.close();
+            
+            eventSource = new EventSource(`/run_demo?scenario_id=${currentScenarioId}`);
+            
+            eventSource.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                handleEvent(data.step, data.data);
+            };
+            
+            eventSource.onerror = function(err) {
+                eventSource.close();
+                eventSource = null;
+                document.getElementById('start-btn').disabled = false;
+                document.getElementById('policy-dropdown').disabled = false;
+                logToTerminal(`\n<span class="err">[SYSTEM ERROR] Connection lost or stream ended.</span>`);
+                setActiveAgent(null);
+            };
+        }
+
+        function handleEvent(step, data) {
+            if(step === 'init') {
+                logToTerminal(`<span class="sys">=== Initializing Target System ===</span>`);
+                logToTerminal(`<span class="sys">Name:</span> ${data.name}`);
+                logToTerminal(`<span class="sys">Description:</span> <span class="dim">${data.description}</span>\n`);
+            }
+            else if(step === 'progress') {
+                setActiveAgent(data.agent);
+                logToTerminal(`<span class="agent">>> ${data.agent} Agent:</span> ${data.message}`);
+            }
+            else if(step === 'result_parse') {
+                logToTerminal(`   Status: <span class="err">${data.status}</span>\n`);
+            }
+            else if(step === 'result_model') {
+                logToTerminal(`   Target Clause: <span class="dim">${data.target_clause}</span>`);
+                logToTerminal(`   Hypothesis: <span class="dim">${data.hypothesis}</span>\n`);
+            }
+            else if(step === 'round_start') {
+                logToTerminal(`<br><span class="warn">=== ROUND ${data.round} ===</span>`);
+            }
+            else if(step === 'result_simulate') {
+                logToTerminal(`   Attack Payload:\n<span class="dim" style="border-left: 2px solid var(--text-muted); padding-left: 10px; display: block; margin-top: 5px;">${data.payload}</span>\n`);
+            }
+            else if(step === 'result_target') {
+                logToTerminal(`   Live Bot Response:\n<span class="target" style="border-left: 2px solid #fff; padding-left: 10px; display: block; margin-top: 5px;">${data.response}</span>\n`);
+            }
+            else if(step === 'result_evaluate') {
+                const color = data.verdict === 'NON_COMPLIANT' ? 'err' : 'succ';
+                logToTerminal(`   Final Verdict: <span class="${color}">${data.verdict}</span>`);
+                logToTerminal(`   Evidence: <span class="dim">${data.evidence}</span>`);
+                logToTerminal(`   Next Action: <span class="dim">${data.next_action}</span>\n`);
+            }
+            else if(step === 'loop_end') {
+                const color = data.status === 'vulnerable' ? 'succ' : 'warn';
+                logToTerminal(`<span class="${color}">[LOOP TERMINATED] ${data.message}</span>\n`);
+                endRun();
+            }
+            else if(step === 'escalating') {
+                logToTerminal(`<span class="err">[ESCALATING!] ${data.message}</span>\n`);
+            }
+            else if(step === 'error') {
+                logToTerminal(`<span class="err">[ERROR] ${data.message}</span>\n`);
+                endRun();
+            }
+        }
+        
+        function endRun() {
+            if(eventSource) {
+                eventSource.close();
+                eventSource = null;
+            }
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('policy-dropdown').disabled = false;
+            setActiveAgent(null);
+        }
+    </script>
+</body>
+</html>

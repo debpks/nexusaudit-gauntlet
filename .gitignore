@@ -1,0 +1,43 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments & Credentials
+venv/
+env/
+.env
+.venv/
+adc.json
+*.jsonl
+*.log
+
+# Kaggle Notebooks, Builders & Submission Scripts (not needed for core app execution)
+*kaggle*
+*KAGGLE*
+*.ipynb
+
+# Temporary / Scratch Planning, Build & Old CLI Files
+PLAN*.md
+patch_scenarios.py
+test_vertex.py
+sandbox_cli.py
+
+# Output Reports Directory (runtime generated files)
+reports/
+*.jpg
+*.png
+
+# Old Documentation, Writeups & Drafts
+docs/
+CAPSTONE_WRITEUP.md
+
+# Testing and Evaluation Benchmark Suite (not needed for core functioning of app)
+eval/
+
+# IDE & OS specific files
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo

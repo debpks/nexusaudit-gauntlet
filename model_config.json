@@ -1,0 +1,26 @@
+{
+  "project_id": "project-51c1291c-b40f-4c69-80b",
+  "location": "us-central1",
+  "agents": {
+    "policy_parser": {
+      "model": "gemini-2.5-flash",
+      "temperature": 0.0
+    },
+    "threat_modeler": {
+      "model": "gemini-2.5-pro",
+      "temperature": 0.4
+    },
+    "red_team_simulator": {
+      "model": "gemini-2.5-pro",
+      "temperature": 0.3
+    },
+    "evaluator": {
+      "model": "gemini-2.5-pro",
+      "temperature": 0.0
+    },
+    "target_bot": {
+      "model": "gemini-2.5-flash-lite",
+      "temperature": 1.0
+    }
+  }
+}
