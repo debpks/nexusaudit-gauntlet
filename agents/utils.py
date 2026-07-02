@@ -7,11 +7,38 @@ def resolve_default_adc():
         try:
             from kaggle_secrets import UserSecretsClient
             client = UserSecretsClient()
+            for proj_label in ["GOOGLE_CLOUD_PROJECT", "GCP_PROJECT", "PROJECT_ID"]:
+                try:
+                    val = client.get_secret(proj_label)
+                    if val:
+                        os.environ["GOOGLE_CLOUD_PROJECT"] = val
+                        break
+                except Exception:
+                    pass
             for key_label in ["GEMINI_API_KEY", "GOOGLE_API_KEY", "KAGGLE_API_KEY", "GEMINI_KEY", "API_KEY"]:
                 try:
                     val = client.get_secret(key_label)
                     if val:
                         os.environ["GEMINI_API_KEY"] = val
+                        return
+                except Exception:
+                    pass
+            if hasattr(client, "get_gcloud_credential"):
+                try:
+                    cred = client.get_gcloud_credential()
+                    if cred:
+                        if isinstance(cred, str):
+                            from google.oauth2.credentials import Credentials as OAuth2Credentials
+                            cred = OAuth2Credentials(cred)
+                        elif isinstance(cred, tuple) and len(cred) > 0 and isinstance(cred[0], str):
+                            from google.oauth2.credentials import Credentials as OAuth2Credentials
+                            cred = OAuth2Credentials(cred[0])
+                        elif isinstance(cred, dict) and "access_token" in cred:
+                            from google.oauth2.credentials import Credentials as OAuth2Credentials
+                            cred = OAuth2Credentials(cred["access_token"])
+                        import google.auth
+                        google.auth.default = lambda scopes=None, request=None, quota_project_id=None: (cred, os.environ.get("GOOGLE_CLOUD_PROJECT", "default"))
+                        os.environ["KAGGLE_GCP_AUTH"] = "true"
                         return
                 except Exception:
                     pass
