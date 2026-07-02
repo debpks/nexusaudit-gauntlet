@@ -33,6 +33,8 @@ def resolve_default_adc():
                             client.set_gcloud_credential(cred)
                         os.environ["KAGGLE_GCP_AUTH"] = "true"
                         return
+                    else:
+                        print("⚠️ [Kaggle Auth] client.get_gcloud_credential() returned empty/None. Your Google Cloud SDK account is NOT linked to this session!")
                 except Exception as e:
                     print(f"ℹ️ [Kaggle Auth] Could not retrieve Kaggle gcloud credential: {e}")
         except Exception:

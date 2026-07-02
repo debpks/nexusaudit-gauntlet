@@ -176,6 +176,9 @@ try:
                 os.environ["KAGGLE_GCP_AUTH"] = "true"
                 print("✅ Successfully authenticated with attached Google Cloud account from Kaggle Add-ons!")
                 credential_loaded = True
+            else:
+                print("⚠️ [Kaggle Auth] client.get_gcloud_credential() returned empty/None. Your Google Cloud SDK account is NOT linked to this session!")
+                print("💡 To link it: click the top menu in Kaggle: Add-ons ➔ Google Cloud SDK ➔ Link Account!")
         except Exception as e:
             print(f"ℹ️ [Kaggle Auth] Could not retrieve Kaggle gcloud credential: {e}")
             print("💡 Please make sure you have linked your account from the top menu: Add-ons ➔ Google Cloud SDK ➔ Link Account!")
