@@ -23,6 +23,24 @@ def resolve_default_adc():
                         return
                 except Exception:
                     pass
+            for sa_label in ["__gcloud_sdk_auth__", "gcloud_sdk_auth", "SERVICE_ACCOUNT", "service_account", "GCP_CREDENTIALS", "gcp_credentials"]:
+                try:
+                    val = client.get_secret(sa_label)
+                    if val:
+                        val_str = str(val).strip()
+                        if val_str.startswith("{") and "service_account" in val_str:
+                            sa_path = "/tmp/kaggle_gcp_sa.json"
+                            with open(sa_path, "w") as f:
+                                f.write(val_str)
+                            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = sa_path
+                            return
+                        elif val_str.startswith("AIzaSy"):
+                            os.environ["GEMINI_API_KEY"] = val_str
+                            return
+                        else:
+                            print(f"ℹ️ [Kaggle Note] Secret '{sa_label}' was found, but it is not an API key or service account JSON. Note: To attach Google Cloud SDK on Kaggle, do NOT use Add-ons ➔ Secrets! Instead, click the menu bar: Add-ons ➔ Google Cloud SDK ➔ Link Account!")
+                except Exception:
+                    pass
             if hasattr(client, "get_gcloud_credential"):
                 try:
                     cred = client.get_gcloud_credential()
