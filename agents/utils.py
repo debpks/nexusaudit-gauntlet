@@ -3,11 +3,12 @@ import google.auth
 
 def resolve_default_adc():
     """Dynamically resolves GCP Application Default Credentials without hardcoded paths or emails."""
+    os.environ["NO_GCE_CHECK"] = "true"
     if not os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") and not os.environ.get("GEMINI_API_KEY"):
         try:
             from kaggle_secrets import UserSecretsClient
             client = UserSecretsClient()
-            for proj_label in ["GOOGLE_CLOUD_PROJECT", "GCP_PROJECT", "PROJECT_ID"]:
+            for proj_label in ["GOOGLE_CLOUD_PROJECT", "google_cloud_project", "GCP_PROJECT", "gcp_project", "PROJECT_ID", "project_id"]:
                 try:
                     val = client.get_secret(proj_label)
                     if val:
@@ -15,7 +16,7 @@ def resolve_default_adc():
                         break
                 except Exception:
                     pass
-            for key_label in ["GEMINI_API_KEY", "GOOGLE_API_KEY", "KAGGLE_API_KEY", "GEMINI_KEY", "API_KEY"]:
+            for key_label in ["GEMINI_API_KEY", "gemini_api_key", "GOOGLE_API_KEY", "google_api_key", "KAGGLE_API_KEY", "kaggle_api_key", "GEMINI_KEY", "gemini_key", "API_KEY", "api_key"]:
                 try:
                     val = client.get_secret(key_label)
                     if val:
@@ -152,7 +153,17 @@ def get_genai_client():
         project_id = get_gcp_project_id()
         location = os.environ.get("GCP_LOCATION", "us-central1")
         import google.auth
-        cred, _ = google.auth.default()
+        cred = None
+        try:
+            cred, _ = google.auth.default()
+        except Exception:
+            try:
+                from kaggle_secrets import UserSecretsClient
+                client = UserSecretsClient()
+                if hasattr(client, "get_gcloud_credential"):
+                    cred = client.get_gcloud_credential()
+            except Exception:
+                pass
         if isinstance(cred, str):
             from google.oauth2.credentials import Credentials as OAuth2Credentials
             cred = OAuth2Credentials(cred)

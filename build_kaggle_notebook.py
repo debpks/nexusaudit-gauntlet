@@ -139,11 +139,12 @@ else:
 print(f"📂 Current Working Directory: {os.getcwd()}")
 
 # 2. Universal Credential & SDK Resolution
+os.environ["NO_GCE_CHECK"] = "true"
 credential_loaded = False
 try:
     from kaggle_secrets import UserSecretsClient
     client = UserSecretsClient()
-    for proj_label in ["GOOGLE_CLOUD_PROJECT", "GCP_PROJECT", "PROJECT_ID"]:
+    for proj_label in ["GOOGLE_CLOUD_PROJECT", "google_cloud_project", "GCP_PROJECT", "gcp_project", "PROJECT_ID", "project_id"]:
         try:
             val = client.get_secret(proj_label)
             if val:
@@ -152,7 +153,7 @@ try:
                 break
         except Exception:
             pass
-    for key_label in ["GEMINI_API_KEY", "GOOGLE_API_KEY", "KAGGLE_API_KEY", "GEMINI_KEY", "API_KEY"]:
+    for key_label in ["GEMINI_API_KEY", "gemini_api_key", "GOOGLE_API_KEY", "google_api_key", "KAGGLE_API_KEY", "kaggle_api_key", "GEMINI_KEY", "gemini_key", "API_KEY", "api_key"]:
         try:
             val = client.get_secret(key_label)
             if val:
@@ -203,7 +204,11 @@ if not credential_loaded:
             else:
                 import google.auth
                 import google.auth.compute_engine
-                credentials, project = google.auth.default()
+                credentials, project = None, None
+                try:
+                    credentials, project = google.auth.default()
+                except Exception:
+                    pass
                 if credentials and not isinstance(credentials, google.auth.compute_engine.credentials.Credentials):
                     print(f"✅ Successfully authenticated with Google Cloud SDK (Project: {project or 'Default'}). Using Vertex AI mode!")
                     credential_loaded = True
