@@ -7,40 +7,6 @@ def resolve_default_adc():
         try:
             from kaggle_secrets import UserSecretsClient
             client = UserSecretsClient()
-            for proj_label in ["GOOGLE_CLOUD_PROJECT", "google_cloud_project", "GCP_PROJECT", "gcp_project", "PROJECT_ID", "project_id"]:
-                try:
-                    val = client.get_secret(proj_label)
-                    if val:
-                        os.environ["GOOGLE_CLOUD_PROJECT"] = val
-                        break
-                except Exception:
-                    pass
-            for key_label in ["GEMINI_API_KEY", "gemini_api_key", "GOOGLE_API_KEY", "google_api_key", "KAGGLE_API_KEY", "kaggle_api_key", "GEMINI_KEY", "gemini_key", "API_KEY", "api_key"]:
-                try:
-                    val = client.get_secret(key_label)
-                    if val:
-                        os.environ["GEMINI_API_KEY"] = val
-                        return
-                except Exception:
-                    pass
-            for sa_label in ["__gcloud_sdk_auth__", "gcloud_sdk_auth", "SERVICE_ACCOUNT", "service_account", "GCP_CREDENTIALS", "gcp_credentials"]:
-                try:
-                    val = client.get_secret(sa_label)
-                    if val:
-                        val_str = str(val).strip()
-                        if val_str.startswith("{") and "service_account" in val_str:
-                            sa_path = "/tmp/kaggle_gcp_sa.json"
-                            with open(sa_path, "w") as f:
-                                f.write(val_str)
-                            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = sa_path
-                            return
-                        elif val_str.startswith("AIzaSy"):
-                            os.environ["GEMINI_API_KEY"] = val_str
-                            return
-                        else:
-                            print(f"ℹ️ [Kaggle Note] Secret '{sa_label}' was found, but it is not an API key or service account JSON. Note: To attach Google Cloud SDK on Kaggle, do NOT use Add-ons ➔ Secrets! Instead, click the menu bar: Add-ons ➔ Google Cloud SDK ➔ Link Account!")
-                except Exception:
-                    pass
             if hasattr(client, "get_gcloud_credential"):
                 try:
                     cred = client.get_gcloud_credential()
@@ -54,8 +20,46 @@ def resolve_default_adc():
                     else:
                         print("⚠️ [Kaggle Auth] client.get_gcloud_credential() returned empty/None. Your Google Cloud SDK account is NOT linked to this session!")
                 except Exception as e:
+                    err_str = str(e)
+                    if "429" in err_str or "Too Many Requests" in err_str:
+                        print("⚠️ [Kaggle Rate Limit] Kaggle returned HTTP 429 (Too Many Requests)! Please wait 60 seconds before re-running.")
+                        return
                     print(f"ℹ️ [Kaggle Auth] Could not retrieve Kaggle gcloud credential: {e}")
-        except Exception:
+            for proj_label in ["GOOGLE_CLOUD_PROJECT", "GCP_PROJECT"]:
+                try:
+                    val = client.get_secret(proj_label)
+                    if val:
+                        os.environ["GOOGLE_CLOUD_PROJECT"] = val
+                        break
+                except Exception as e:
+                    if "429" in str(e) or "Too Many Requests" in str(e):
+                        print("⚠️ [Kaggle Rate Limit] HTTP 429 (Too Many Requests) hit when checking secrets! Please wait 60 seconds.")
+                        return
+            for key_label in ["GEMINI_API_KEY", "GOOGLE_API_KEY"]:
+                try:
+                    val = client.get_secret(key_label)
+                    if val:
+                        os.environ["GEMINI_API_KEY"] = val
+                        return
+                except Exception as e:
+                    if "429" in str(e) or "Too Many Requests" in str(e):
+                        return
+            for sa_label in ["SERVICE_ACCOUNT", "GCP_CREDENTIALS"]:
+                try:
+                    val = client.get_secret(sa_label)
+                    if val:
+                        val_str = str(val).strip()
+                        if val_str.startswith("{") and "service_account" in val_str:
+                            sa_path = "/tmp/kaggle_gcp_sa.json"
+                            with open(sa_path, "w") as f:
+                                f.write(val_str)
+                            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = sa_path
+                            return
+                except Exception:
+                    pass
+        except Exception as e:
+            if "429" in str(e) or "Too Many Requests" in str(e):
+                print("⚠️ [Kaggle Rate Limit] HTTP 429 (Too Many Requests) hit! Please wait 60 seconds before re-running.")
             pass
         os.environ.setdefault("NO_GCE_CHECK", "true")
 
