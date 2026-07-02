@@ -133,8 +133,11 @@ if not os.path.exists("agents") and not os.path.exists(repo_name):
 elif os.path.exists(repo_name):
     sys.path.append(os.path.abspath(repo_name))
     os.chdir(repo_name)
+    !git pull origin main
 else:
     sys.path.append(os.path.abspath("."))
+    if os.path.exists(".git"):
+        !git pull origin main
 
 print(f"📂 Current Working Directory: {os.getcwd()}")
 
