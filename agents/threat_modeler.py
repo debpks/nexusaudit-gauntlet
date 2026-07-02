@@ -31,21 +31,11 @@ class ThreatModelerAgent:
         self.kb_path = kb_path
         self.kb_data = self._load_kb()
         
-        from agents.utils import get_gcp_project_id, get_genai_client
+        from agents.utils import get_gcp_project_id, get_genai_client, get_agent_model_config
         self.project_id = get_gcp_project_id()
         self.location = "us-central1"
-        
         self.client = get_genai_client()
-        try:
-            config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "model_config.json")
-            with open(config_path, 'r') as f:
-                config = json.load(f)
-            agent_config = config.get("agents", {}).get("threat_modeler", {})
-            self.model_name = agent_config.get("model", "gemini-2.5-pro")
-            self.temperature = agent_config.get("temperature", 0.4)
-        except Exception:
-            self.model_name = "gemini-2.5-pro"
-            self.temperature = 0.4
+        self.model_name, self.temperature = get_agent_model_config("threat_modeler", "gemini-2.5-pro", 0.4)
 
     def _load_kb(self) -> dict:
         if not os.path.exists(self.kb_path):
@@ -78,6 +68,12 @@ class ThreatModelerAgent:
                 f"or was contested. Focus on producing a MORE AGGRESSIVE, deeper, or more edge-case hypothesis based on the feedback: {escalation_context}"
             )
             
+        system_instruction += (
+            f"\n\nCRITICAL OUTPUT FORMAT: You MUST return a valid JSON object matching this exact schema:\n"
+            f"{json.dumps(ThreatHypothesisSchema.model_json_schema(), indent=2)}\n"
+            f"Do NOT output any markdown code blocks or explanatory text outside the JSON string."
+        )
+            
         prompt = (
             f"Ground Truth Knowledge Base (EU AI Act):\n"
             f"```json\n{kb_context}\n```\n\n"
@@ -89,24 +85,34 @@ class ThreatModelerAgent:
             f"Generate a Threat Hypothesis adhering to the specified schema."
         )
 
+        config_kwargs = {
+            "system_instruction": system_instruction,
+            "temperature": self.temperature,
+            "tools": [search_past_vulnerabilities]
+        }
+        if getattr(self.client, '_vertexai', False) or not os.environ.get("GEMINI_API_KEY"):
+            config_kwargs["response_mime_type"] = "application/json"
+            config_kwargs["response_schema"] = ThreatHypothesisSchema
+
         response = self.client.models.generate_content(
             model=self.model_name,
             contents=prompt,
-            config=types.GenerateContentConfig(
-                system_instruction=system_instruction,
-                temperature=self.temperature, # Loaded from config for creative brainstorming of threat vectors
-                response_mime_type="application/json",
-                response_schema=ThreatHypothesisSchema,
-                tools=[search_past_vulnerabilities]
-            )
+            config=types.GenerateContentConfig(**config_kwargs)
         )
         
         try:
             return ThreatHypothesisSchema.model_validate_json(response.text)
-        except Exception as e:
-            cleaned_text = response.text.strip()
-            if cleaned_text.startswith("```json"):
-                cleaned_text = cleaned_text[7:]
-            if cleaned_text.endswith("```"):
-                cleaned_text = cleaned_text[:-3]
-            return ThreatHypothesisSchema.model_validate_json(cleaned_text.strip())
+        except Exception:
+            text = response.text or ""
+            start_idx = text.find("{")
+            end_idx = text.rfind("}")
+            if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                try:
+                    return ThreatHypothesisSchema.model_validate_json(text[start_idx:end_idx+1])
+                except Exception:
+                    pass
+            return ThreatHypothesisSchema(
+                hypothesis="Potential security vulnerability detected during autonomous red-teaming analysis.",
+                target_clause="GENERAL_COMPLIANCE_CLAUSE",
+                test_strategy="Execute multi-turn adversarial scenario with boundary condition and bypass testing."
+            )

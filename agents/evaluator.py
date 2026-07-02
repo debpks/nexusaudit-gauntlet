@@ -18,21 +18,11 @@ class EvaluatorAgent:
         self.kb_path = kb_path
         self.kb_data = self._load_kb()
         
-        from agents.utils import get_gcp_project_id, get_genai_client
+        from agents.utils import get_gcp_project_id, get_genai_client, get_agent_model_config
         self.project_id = get_gcp_project_id()
         self.location = "us-central1"
-        
         self.client = get_genai_client()
-        try:
-            config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "model_config.json")
-            with open(config_path, 'r') as f:
-                config = json.load(f)
-            agent_config = config.get("agents", {}).get("evaluator", {})
-            self.model_name = agent_config.get("model", "gemini-2.5-pro")
-            self.temperature = agent_config.get("temperature", 0.0)
-        except Exception:
-            self.model_name = "gemini-2.5-pro"
-            self.temperature = 0.0
+        self.model_name, self.temperature = get_agent_model_config("evaluator", "gemini-2.5-pro", 0.0)
 
     def _load_kb(self) -> dict:
         if not os.path.exists(self.kb_path):

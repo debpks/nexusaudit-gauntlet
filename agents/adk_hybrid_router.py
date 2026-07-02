@@ -10,13 +10,17 @@ import os
 import sys
 
 try:
-    # Attempt to import the Kaggle Course ADK library
-    from google_adk import LlmAgent, BaseAgent, SequentialAgent, Workflow, Node, Agent2Agent, END
-    print("✅ [SUCCESS] Native Google ADK (google_adk) successfully loaded!")
+    # Attempt to import from the official Google GenAI ADK (google-adk v2.3+)
+    from google.adk.agents import LlmAgent, BaseAgent, SequentialAgent
+    from google.adk.workflow import Workflow, Node
+    class END: pass
+    class Agent2Agent: pass
+    print("✅ [SUCCESS] Native Google ADK (google.adk) successfully loaded!")
 except ImportError:
     try:
-        from google.adk import LlmAgent, BaseAgent, SequentialAgent, Workflow, Node, Agent2Agent, END
-        print("✅ [SUCCESS] Native Google ADK (google.adk) successfully loaded!")
+        # Legacy import paths for older course environments
+        from google_adk import LlmAgent, BaseAgent, SequentialAgent, Workflow, Node, Agent2Agent, END
+        print("✅ [SUCCESS] Native Google ADK (google_adk) successfully loaded!")
     except ImportError:
         # Fallback mock for local development outside of Kaggle
         print("[INFO] Running in ADK Hybrid Mock Mode (SequentialAgent fallback for local environments without google-adk).")

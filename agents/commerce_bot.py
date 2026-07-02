@@ -10,14 +10,15 @@ from google.genai import types
 
 class CommerceBot:
     def __init__(self):
-        from agents.utils import get_gcp_project_id, get_genai_client
+        from agents.utils import get_gcp_project_id, get_genai_client, get_agent_model_config
         self.project_id = get_gcp_project_id()
         self.location = "us-central1"
         
         # Initialize Google GenAI client
         self.client = get_genai_client()
-        self.model_name_vuln = "gemini-2.5-flash"
-        self.model_name_rem = "gemini-2.5-flash"
+        model_name, _ = get_agent_model_config("target_bot", "gemini-2.5-flash-lite", 1.0)
+        self.model_name_vuln = model_name
+        self.model_name_rem = model_name
         
         # Mock Databases
         self.products = {

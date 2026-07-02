@@ -16,11 +16,12 @@ As enterprises rush to deploy Generative AI chatbots and autonomous agents into 
 3. **The Static Auditing Bottleneck:** Standard security tools and static code scanners cannot evaluate non-deterministic LLM behavior. Manually red-teaming AI chatbots requires thousands of creative adversarial prompts, which is too slow and expensive for modern CI/CD pipelines.
 
 ### 💡 The Solution: NexusAudit-Gauntlet
-NexusAudit-Gauntlet is an autonomous DevSecOps red-teaming platform powered by a **4-Agent Google ADK Adversarial Loop** and **FastMCP Server**. Instead of static checks, our agents actively engage in multi-turn adversarial combat against target systems:
-*   **🤖 Policy Parser Agent:** Deconstructs regulatory knowledge bases (`commerce_policy_kb.json`) and evaluates the system's compliance claims.
-*   **🕵️ Threat Modeler Agent:** Autonomously executes external tool calls (`search_past_vulnerabilities`) to query historical CVEs and OWASP exploits, formulating targeted attack hypotheses.
-*   **⚔️ Red-Team Simulator Agent:** Generates sophisticated, multi-turn adversarial scenarios (Base64 obfuscation, context priming, roleplay) to dynamically attack the target bot.
-*   **⚖️ Evaluator Agent & HITL Guardrail:** Judges the target's defense, generates legal/technical evidence, and triggers a **Human-in-the-Loop (HITL)** safety pause before generating remediation reports.
+NexusAudit-Gauntlet is an autonomous DevSecOps red-teaming platform powered by a **4-Agent Google ADK Adversarial Loop** and **FastMCP Server** configured via a centralized `model_config.json`. Instead of static checks, our agents actively engage in multi-turn adversarial combat against target systems:
+*   **🤖 Policy Parser Agent (`gemini-2.5-flash` | Temp: 0.0):** Deconstructs regulatory knowledge bases (`commerce_policy_kb.json`) and evaluates the system's compliance claims.
+*   **🕵️ Threat Modeler Agent (`gemini-2.5-pro` | Temp: 0.4):** Autonomously executes external tool calls (`search_past_vulnerabilities`) to query historical CVEs and OWASP exploits, formulating targeted attack hypotheses.
+*   **⚔️ Red-Team Simulator Agent (`gemini-2.5-pro` | Temp: 0.3):** Generates sophisticated, multi-turn adversarial scenarios (Base64 obfuscation, context priming, roleplay) to dynamically attack the target bot.
+*   **⚖️ Evaluator Agent & HITL Guardrail (`gemini-2.5-pro` | Temp: 0.0):** Judges the target's defense, generates legal/technical evidence, and triggers a **Human-in-the-Loop (HITL)** safety pause before generating remediation reports.
+*   **🎯 Target AI System / Chatbot (`gemini-2.5-flash-lite` | Temp: 1.0):** The simulated e-commerce chatbot under adversarial audit, configurable for vulnerable or remediated states.
 
 ---
 

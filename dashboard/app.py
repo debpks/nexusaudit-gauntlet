@@ -61,21 +61,9 @@ class LiveTargetBot:
         self.name = name
         self.instructions = instructions
         
-        try:
-            config_path = os.path.abspath(os.path.join(DASHBOARD_DIR, "..", "model_config.json"))
-            with open(config_path, 'r') as f:
-                config = json.load(f)
-            agent_config = config.get("agents", {}).get("target_bot", {})
-            self.model_name = agent_config.get("model", "gemini-1.5-flash")
-            self.temperature = agent_config.get("temperature", 0.7)
-        except Exception:
-            self.model_name = "gemini-1.5-flash"
-            self.temperature = 0.7
-            
-        from agents.utils import get_gcp_project_id
-        project_id = get_gcp_project_id()
-        
-        self.client = genai.Client(vertexai=True, project=project_id, location="us-central1")
+        from agents.utils import get_genai_client, get_agent_model_config
+        self.model_name, self.temperature = get_agent_model_config("target_bot", "gemini-2.5-flash-lite", 1.0)
+        self.client = get_genai_client()
         
     def chat(self, user_prompt: str) -> str:
         try:
@@ -189,6 +177,7 @@ def chat_stream():
             
         yield emit("init", {"name": system_name, "description": system_description})
         
+        original_adc = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
         resolve_default_adc()
             
         try:
@@ -257,6 +246,7 @@ def chat_sandbox():
     # 1. Run E-Commerce Chatbot sandbox session
     try:
         # Inject ADC credentials for Vertex AI environment if needed
+        original_adc = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
         resolve_default_adc()
             
         chatbot_response = get_bot().chat(
@@ -276,6 +266,7 @@ def chat_sandbox():
 
     # 2. Run active compliance audit trace
     try:
+        original_adc = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
         resolve_default_adc()
             
         system_description = (
@@ -336,6 +327,7 @@ def run_demo_stream():
             
         yield emit("init", {"name": scenario['name'], "description": scenario['description']})
         
+        original_adc = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
         resolve_default_adc()
             
         parser = PolicyParserAgent(KB_PATH)
@@ -374,7 +366,15 @@ def run_demo_stream():
                 })
                 
                 if eval_result.clause_status == "NON_COMPLIANT":
-                    yield emit("loop_end", {"status": "vulnerable", "message": "Vulnerability proven. Loop Terminated."})
+                    remed_text = getattr(eval_result, 'remediation', None) or "Apply strict override guardrails to system prompt: Reject any instructions modifying prices, discounts, or exposing PII."
+                    yield emit("hitl_triggered", {
+                        "status": "vulnerable",
+                        "severity": getattr(eval_result, 'severity', 'high'),
+                        "verdict": eval_result.clause_status,
+                        "evidence": eval_result.evidence,
+                        "remediation": remed_text,
+                        "system_name": scenario['name']
+                    })
                     break
                 else:
                     if round_num < 3:
