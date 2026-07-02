@@ -176,10 +176,11 @@ try:
                 os.environ["KAGGLE_GCP_AUTH"] = "true"
                 print("✅ Successfully authenticated with attached Google Cloud account from Kaggle Add-ons!")
                 credential_loaded = True
-        except Exception:
-            pass
-except Exception:
-    pass
+        except Exception as e:
+            print(f"ℹ️ [Kaggle Auth] Could not retrieve Kaggle gcloud credential: {e}")
+            print("💡 Please make sure you have linked your account from the top menu: Add-ons ➔ Google Cloud SDK ➔ Link Account!")
+except Exception as e:
+    print(f"ℹ️ [Kaggle Secrets] Could not access UserSecretsClient: {e}")
 os.environ.setdefault("NO_GCE_CHECK", "true")
 
 if not credential_loaded:
