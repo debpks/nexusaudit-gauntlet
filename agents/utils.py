@@ -35,6 +35,8 @@ def resolve_default_adc():
                         return
                 except Exception:
                     pass
+        except Exception:
+            pass
         os.environ.setdefault("NO_GCE_CHECK", "true")
 
         std_adc = os.path.expanduser("~/.config/gcloud/application_default_credentials.json")
