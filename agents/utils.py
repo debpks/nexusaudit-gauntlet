@@ -19,8 +19,8 @@ def resolve_default_adc():
                 try:
                     cred = client.get_gcloud_credential()
                     if cred:
-                        import google.auth._default
-                        google.auth._default._DEFAULT_CREDENTIALS = (cred, os.environ.get("GOOGLE_CLOUD_PROJECT", "default"))
+                        import google.auth
+                        google.auth.default = lambda scopes=None, request=None, quota_project_id=None: (cred, os.environ.get("GOOGLE_CLOUD_PROJECT", "default"))
                         os.environ["KAGGLE_GCP_AUTH"] = "true"
                         return
                 except Exception:
@@ -85,7 +85,9 @@ def get_genai_client():
     else:
         project_id = get_gcp_project_id()
         location = os.environ.get("GCP_LOCATION", "us-central1")
-        return genai.Client(vertexai=True, project=project_id, location=location)
+        import google.auth
+        cred, _ = google.auth.default()
+        return genai.Client(vertexai=True, project=project_id, location=location, credentials=cred)
 
 def get_agent_model_config(agent_name: str, default_model: str = "gemini-2.5-pro", default_temp: float = 0.0):
     """
