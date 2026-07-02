@@ -142,7 +142,6 @@ else:
 print(f"📂 Current Working Directory: {os.getcwd()}")
 
 # 2. Universal Credential & SDK Resolution
-os.environ["NO_GCE_CHECK"] = "true"
 credential_loaded = False
 try:
     from kaggle_secrets import UserSecretsClient
@@ -170,17 +169,10 @@ try:
         try:
             cred = client.get_gcloud_credential()
             if cred:
-                if isinstance(cred, str):
-                    from google.oauth2.credentials import Credentials as OAuth2Credentials
-                    cred = OAuth2Credentials(cred)
-                elif isinstance(cred, tuple) and len(cred) > 0 and isinstance(cred[0], str):
-                    from google.oauth2.credentials import Credentials as OAuth2Credentials
-                    cred = OAuth2Credentials(cred[0])
-                elif isinstance(cred, dict) and "access_token" in cred:
-                    from google.oauth2.credentials import Credentials as OAuth2Credentials
-                    cred = OAuth2Credentials(cred["access_token"])
-                import google.auth
-                google.auth.default = lambda scopes=None, request=None, quota_project_id=None: (cred, os.environ.get("GOOGLE_CLOUD_PROJECT", "default"))
+                if hasattr(client, "set_tensorflow_credential"):
+                    client.set_tensorflow_credential(cred)
+                if hasattr(client, "set_gcloud_credential"):
+                    client.set_gcloud_credential(cred)
                 os.environ["KAGGLE_GCP_AUTH"] = "true"
                 print("✅ Successfully authenticated with attached Google Cloud account from Kaggle Add-ons!")
                 credential_loaded = True
@@ -188,6 +180,7 @@ try:
             pass
 except Exception:
     pass
+os.environ.setdefault("NO_GCE_CHECK", "true")
 
 if not credential_loaded:
     if os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"):

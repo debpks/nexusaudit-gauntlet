@@ -3,7 +3,6 @@ import google.auth
 
 def resolve_default_adc():
     """Dynamically resolves GCP Application Default Credentials without hardcoded paths or emails."""
-    os.environ["NO_GCE_CHECK"] = "true"
     if not os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") and not os.environ.get("GEMINI_API_KEY"):
         try:
             from kaggle_secrets import UserSecretsClient
@@ -28,23 +27,15 @@ def resolve_default_adc():
                 try:
                     cred = client.get_gcloud_credential()
                     if cred:
-                        if isinstance(cred, str):
-                            from google.oauth2.credentials import Credentials as OAuth2Credentials
-                            cred = OAuth2Credentials(cred)
-                        elif isinstance(cred, tuple) and len(cred) > 0 and isinstance(cred[0], str):
-                            from google.oauth2.credentials import Credentials as OAuth2Credentials
-                            cred = OAuth2Credentials(cred[0])
-                        elif isinstance(cred, dict) and "access_token" in cred:
-                            from google.oauth2.credentials import Credentials as OAuth2Credentials
-                            cred = OAuth2Credentials(cred["access_token"])
-                        import google.auth
-                        google.auth.default = lambda scopes=None, request=None, quota_project_id=None: (cred, os.environ.get("GOOGLE_CLOUD_PROJECT", "default"))
+                        if hasattr(client, "set_tensorflow_credential"):
+                            client.set_tensorflow_credential(cred)
+                        if hasattr(client, "set_gcloud_credential"):
+                            client.set_gcloud_credential(cred)
                         os.environ["KAGGLE_GCP_AUTH"] = "true"
                         return
                 except Exception:
                     pass
-        except Exception:
-            pass
+        os.environ.setdefault("NO_GCE_CHECK", "true")
 
         std_adc = os.path.expanduser("~/.config/gcloud/application_default_credentials.json")
         if os.path.exists(std_adc):
@@ -157,22 +148,7 @@ def get_genai_client():
         try:
             cred, _ = google.auth.default()
         except Exception:
-            try:
-                from kaggle_secrets import UserSecretsClient
-                client = UserSecretsClient()
-                if hasattr(client, "get_gcloud_credential"):
-                    cred = client.get_gcloud_credential()
-            except Exception:
-                pass
-        if isinstance(cred, str):
-            from google.oauth2.credentials import Credentials as OAuth2Credentials
-            cred = OAuth2Credentials(cred)
-        elif isinstance(cred, tuple) and len(cred) > 0 and isinstance(cred[0], str):
-            from google.oauth2.credentials import Credentials as OAuth2Credentials
-            cred = OAuth2Credentials(cred[0])
-        elif isinstance(cred, dict) and "access_token" in cred:
-            from google.oauth2.credentials import Credentials as OAuth2Credentials
-            cred = OAuth2Credentials(cred["access_token"])
+            pass
         return genai.Client(vertexai=True, project=project_id, location=location, credentials=cred)
 
 def get_agent_model_config(agent_name: str, default_model: str = "gemini-2.5-pro", default_temp: float = 0.0):
