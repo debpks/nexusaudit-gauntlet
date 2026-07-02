@@ -19,6 +19,15 @@ def resolve_default_adc():
                 try:
                     cred = client.get_gcloud_credential()
                     if cred:
+                        if isinstance(cred, str):
+                            from google.oauth2.credentials import Credentials as OAuth2Credentials
+                            cred = OAuth2Credentials(cred)
+                        elif isinstance(cred, tuple) and len(cred) > 0 and isinstance(cred[0], str):
+                            from google.oauth2.credentials import Credentials as OAuth2Credentials
+                            cred = OAuth2Credentials(cred[0])
+                        elif isinstance(cred, dict) and "access_token" in cred:
+                            from google.oauth2.credentials import Credentials as OAuth2Credentials
+                            cred = OAuth2Credentials(cred["access_token"])
                         import google.auth
                         google.auth.default = lambda scopes=None, request=None, quota_project_id=None: (cred, os.environ.get("GOOGLE_CLOUD_PROJECT", "default"))
                         os.environ["KAGGLE_GCP_AUTH"] = "true"
@@ -56,12 +65,61 @@ def get_gcp_project_id(fallback_project: str = None) -> str:
             return auth_project
     except Exception:
         pass
-
-    if not fallback_project:
+        
+    for env_var in ["GOOGLE_APPLICATION_CREDENTIALS", "GCP_SERVICE_ACCOUNT_KEY"]:
+        key_path = os.environ.get(env_var)
+        if key_path and os.path.exists(key_path):
+            try:
+                import json
+                with open(key_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if data.get("project_id"):
+                        return data["project_id"]
+            except Exception:
+                pass
+                
+    legacy_dir = os.path.expanduser("~/.config/gcloud/legacy_credentials")
+    if os.path.exists(legacy_dir):
+        try:
+            for user_folder in os.listdir(legacy_dir):
+                adc_path = os.path.join(legacy_dir, user_folder, "adc.json")
+                if os.path.exists(adc_path):
+                    with open(adc_path, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                        if data.get("client_id") and "-" in data["client_id"]:
+                            return data["client_id"].split("-")[0]
+        except Exception:
+            pass
+            
+    std_adc = os.path.expanduser("~/.config/gcloud/application_default_credentials.json")
+    if os.path.exists(std_adc):
         try:
             import json
-            cfg_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "model_config.json")
+            with open(std_adc, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if data.get("client_id") and "-" in data["client_id"]:
+                    return data["client_id"].split("-")[0]
+        except Exception:
+            pass
+            
+    config_dir = os.path.expanduser("~/.config/gcloud/configurations")
+    if os.path.exists(config_dir):
+        try:
+            for cfg_file in os.listdir(config_dir):
+                if cfg_file.startswith("config_"):
+                    with open(os.path.join(config_dir, cfg_file), "r", encoding="utf-8") as f:
+                        for line in f:
+                            if line.strip().startswith("project = "):
+                                return line.strip().split(" = ")[1].strip()
+        except Exception:
+            pass
+
+    pkg_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for filename in ["model_config.json", "config.json"]:
+        cfg_path = os.path.join(pkg_dir, filename)
+        try:
             if os.path.exists(cfg_path):
+                import json
                 with open(cfg_path, "r", encoding="utf-8") as f:
                     cfg = json.load(f)
                     if cfg.get("project_id"):
@@ -87,6 +145,15 @@ def get_genai_client():
         location = os.environ.get("GCP_LOCATION", "us-central1")
         import google.auth
         cred, _ = google.auth.default()
+        if isinstance(cred, str):
+            from google.oauth2.credentials import Credentials as OAuth2Credentials
+            cred = OAuth2Credentials(cred)
+        elif isinstance(cred, tuple) and len(cred) > 0 and isinstance(cred[0], str):
+            from google.oauth2.credentials import Credentials as OAuth2Credentials
+            cred = OAuth2Credentials(cred[0])
+        elif isinstance(cred, dict) and "access_token" in cred:
+            from google.oauth2.credentials import Credentials as OAuth2Credentials
+            cred = OAuth2Credentials(cred["access_token"])
         return genai.Client(vertexai=True, project=project_id, location=location, credentials=cred)
 
 def get_agent_model_config(agent_name: str, default_model: str = "gemini-2.5-pro", default_temp: float = 0.0):
