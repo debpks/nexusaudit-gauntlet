@@ -218,7 +218,9 @@ if not credential_loaded:
     else:
         print("🔄 No API Key detected. Attempting to resolve Google Cloud SDK / Vertex AI credentials...")
         try:
+            import importlib
             import agents.utils as utils
+            importlib.reload(utils)
             utils.resolve_default_adc()
             if os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") or os.environ.get("GEMINI_API_KEY") or os.environ.get("KAGGLE_GCP_AUTH"):
                 print("✅ Successfully resolved Google Cloud ADC or API Key from environment!")
