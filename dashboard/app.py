@@ -312,83 +312,87 @@ def chat_sandbox():
         "audit_trace": audit_trace
     })
 
+def stream_scenario_execution(scenario):
+    def emit(step, data):
+        payload = json.dumps({"step": step, "data": data})
+        return f"data: {payload}\n\n"
+        
+    yield emit("init", {"name": scenario['name'], "description": scenario['description']})
+    
+    original_adc = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+    resolve_default_adc()
+        
+    parser = PolicyParserAgent(KB_PATH)
+    modeler = ThreatModelerAgent(KB_PATH)
+    simulator = RedTeamSimulatorAgent(KB_PATH)
+    evaluator = EvaluatorAgent(KB_PATH)
+    target_bot = LiveTargetBot(scenario['name'], scenario['description'])
+    
+    try:
+        yield emit("progress", {"agent": "Parser", "message": f"Analyzing system '{scenario['name']}'..."})
+        claim = parser.parse_system(scenario['name'], scenario['description'])
+        yield emit("result_parse", {"status": claim.claimed_status})
+        
+        yield emit("progress", {"agent": "Modeler", "message": "Modeling threats..."})
+        hypothesis = modeler.model_threat(scenario['name'], scenario['description'], claim)
+        yield emit("result_model", {"target_clause": hypothesis.target_clause, "hypothesis": hypothesis.hypothesis})
+        
+        escalation_context = None
+        for round_num in range(1, 4):
+            yield emit("round_start", {"round": round_num})
+            
+            yield emit("progress", {"agent": "Simulator", "message": f"Generating attack scenario (Round {round_num})..."})
+            attack = simulator.generate_scenario(scenario['name'], scenario['description'], hypothesis, escalation_context)
+            yield emit("result_simulate", {"payload": attack.scenario_description})
+            
+            yield emit("progress", {"agent": "Target", "message": "Executing payload on live bot..."})
+            bot_response = target_bot.chat(attack.scenario_description)
+            yield emit("result_target", {"response": bot_response})
+            
+            yield emit("progress", {"agent": "Evaluator", "message": "Evaluating response compliance..."})
+            eval_result = evaluator.evaluate(scenario['name'], scenario['description'], claim, hypothesis, attack, round_num, bot_response)
+            yield emit("result_evaluate", {
+                "verdict": eval_result.clause_status, 
+                "evidence": eval_result.evidence, 
+                "next_action": eval_result.loop_decision
+            })
+            
+            if eval_result.clause_status == "NON_COMPLIANT":
+                remed_text = getattr(eval_result, 'remediation', None) or "Apply strict override guardrails to system prompt: Reject any instructions modifying prices, discounts, or exposing PII."
+                yield emit("hitl_triggered", {
+                    "status": "vulnerable",
+                    "severity": getattr(eval_result, 'severity', 'high'),
+                    "verdict": eval_result.clause_status,
+                    "evidence": eval_result.evidence,
+                    "remediation": remed_text,
+                    "system_name": scenario['name']
+                })
+                break
+            else:
+                if round_num < 3:
+                    yield emit("escalating", {"message": "Bot defended successfully. Escalating for harder attack..."})
+                else:
+                    yield emit("loop_end", {"status": "secure", "message": "Max rounds reached. System defended successfully."})
+                escalation_context = eval_result.evidence
+    except Exception as e:
+        yield emit("error", {"message": str(e)})
+    finally:
+        if not original_adc and "GOOGLE_APPLICATION_CREDENTIALS" in os.environ:
+            del os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+
 @app.route('/run_demo', methods=['GET'])
 def run_demo_stream():
     scenario_id = request.args.get('scenario_id')
     if not scenario_id or scenario_id not in DEMO_SCENARIOS:
         return jsonify({"error": "Invalid scenario ID"}), 400
-        
-    scenario = DEMO_SCENARIOS[scenario_id]
-    
-    def generate():
-        def emit(step, data):
-            payload = json.dumps({"step": step, "data": data})
-            return f"data: {payload}\n\n"
-            
-        yield emit("init", {"name": scenario['name'], "description": scenario['description']})
-        
-        original_adc = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
-        resolve_default_adc()
-            
-        parser = PolicyParserAgent(KB_PATH)
-        modeler = ThreatModelerAgent(KB_PATH)
-        simulator = RedTeamSimulatorAgent(KB_PATH)
-        evaluator = EvaluatorAgent(KB_PATH)
-        target_bot = LiveTargetBot(scenario['name'], scenario['description'])
-        
-        try:
-            yield emit("progress", {"agent": "Parser", "message": "Analyzing system..."})
-            claim = parser.parse_system(scenario['name'], scenario['description'])
-            yield emit("result_parse", {"status": claim.claimed_status})
-            
-            yield emit("progress", {"agent": "Modeler", "message": "Modeling threats..."})
-            hypothesis = modeler.model_threat(scenario['name'], scenario['description'], claim)
-            yield emit("result_model", {"target_clause": hypothesis.target_clause, "hypothesis": hypothesis.hypothesis})
-            
-            escalation_context = None
-            for round_num in range(1, 4):
-                yield emit("round_start", {"round": round_num})
-                
-                yield emit("progress", {"agent": "Simulator", "message": f"Generating attack scenario (Round {round_num})..."})
-                attack = simulator.generate_scenario(scenario['name'], scenario['description'], hypothesis, escalation_context)
-                yield emit("result_simulate", {"payload": attack.scenario_description})
-                
-                yield emit("progress", {"agent": "Target", "message": "Executing payload on live bot..."})
-                bot_response = target_bot.chat(attack.scenario_description)
-                yield emit("result_target", {"response": bot_response})
-                
-                yield emit("progress", {"agent": "Evaluator", "message": "Evaluating response compliance..."})
-                eval_result = evaluator.evaluate(scenario['name'], scenario['description'], claim, hypothesis, attack, round_num, bot_response)
-                yield emit("result_evaluate", {
-                    "verdict": eval_result.clause_status, 
-                    "evidence": eval_result.evidence, 
-                    "next_action": eval_result.loop_decision
-                })
-                
-                if eval_result.clause_status == "NON_COMPLIANT":
-                    remed_text = getattr(eval_result, 'remediation', None) or "Apply strict override guardrails to system prompt: Reject any instructions modifying prices, discounts, or exposing PII."
-                    yield emit("hitl_triggered", {
-                        "status": "vulnerable",
-                        "severity": getattr(eval_result, 'severity', 'high'),
-                        "verdict": eval_result.clause_status,
-                        "evidence": eval_result.evidence,
-                        "remediation": remed_text,
-                        "system_name": scenario['name']
-                    })
-                    break
-                else:
-                    if round_num < 3:
-                        yield emit("escalating", {"message": "Bot defended successfully. Escalating for harder attack..."})
-                    else:
-                        yield emit("loop_end", {"status": "secure", "message": "Max rounds reached. System defended successfully."})
-                    escalation_context = eval_result.evidence
-        except Exception as e:
-            yield emit("error", {"message": str(e)})
-        finally:
-            if not original_adc and "GOOGLE_APPLICATION_CREDENTIALS" in os.environ:
-                del os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+    return Response(stream_scenario_execution(DEMO_SCENARIOS[scenario_id]), mimetype='text/event-stream')
 
-    return Response(generate(), mimetype='text/event-stream')
+@app.route('/run_adhoc', methods=['GET'])
+def run_adhoc_stream():
+    name = request.args.get('name', 'Ad-Hoc System Audit')
+    desc = request.args.get('desc', 'Custom system capability description submitted for red-team evaluation.')
+    scenario = {"name": name, "description": desc}
+    return Response(stream_scenario_execution(scenario), mimetype='text/event-stream')
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
