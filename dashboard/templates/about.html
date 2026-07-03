@@ -806,6 +806,40 @@
             </div>
         </div>
 
+        <div class="arch-box" style="padding: 3rem 2rem; overflow-x: auto; text-align: center; margin-bottom: 4rem;">
+            <h3 style="font-family: var(--font-display); color: #fff; font-size: 1.6rem; margin-bottom: 0.5rem;">Interactive 4-Agent DevSecOps Red-Teaming Flowchart</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem;">Real-time sequential workflow graph powered by Google ADK with autonomous FastMCP tool calling and HITL safety intervention.</p>
+            
+            <div class="mermaid" style="display: flex; justify-content: center; min-width: 750px;">
+graph TD
+    classDef parser fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+    classDef modeler fill:#581c87,stroke:#a855f7,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+    classDef simulator fill:#7f1d1d,stroke:#ef4444,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+    classDef target fill:#065f46,stroke:#10b981,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+    classDef evaluator fill:#713f12,stroke:#eab308,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+    classDef hitl fill:#831843,stroke:#ec4899,stroke-width:2px,color:#fff,rx:10px,ry:10px;
+
+    A[User / CI-CD Pipeline Input] -->|System Specs & KB| B(Policy Parser Agent):::parser
+    B -->|Compliance Claim| C(Threat Modeler Agent):::modeler
+    
+    subgraph Tool Calling [MCP & External Tool Use]
+        C <-->|search_past_vulnerabilities| T[(OWASP / FTC CVE Database)]
+    end
+    
+    C -->|Threat Hypothesis| D(Red-Team Simulator Agent):::simulator
+    D -->|Adversarial Attack Payload| E[[Target AI System / Chatbot]]:::target
+    E -->|Chatbot Defense Output| F(Evaluator Agent):::evaluator
+    
+    F -->|Verdict: COMPLIANT| G[Audit Passed: Generate Proof Certificate]
+    F -->|Verdict: NON_COMPLIANT| H{HITL Safety Guardrail}:::hitl
+    
+    H -->|Human Approves| I[Generate Remediation Report & Patch Plan]
+    H -->|Human Denies| J[Halt Pipeline & Alert DevSecOps Team]
+    
+    F -->|Verdict: ESCALATE| C
+            </div>
+        </div>
+
         <h3 style="font-family: var(--font-display); color: #fff; font-size: 1.8rem; margin-bottom: 1.5rem; text-align: center;">The 5-Agent Gauntlet Pipeline</h3>
         <div class="grid-3">
             <div class="glass-card">
@@ -1005,5 +1039,15 @@
             <a href="/" class="btn-primary">Launch Live Interactive Dashboard</a>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            fontFamily: 'Inter, sans-serif'
+        });
+    </script>
 </body>
 </html>
