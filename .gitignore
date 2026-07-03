@@ -13,9 +13,9 @@ adc.json
 *.log
 
 # Kaggle Notebooks, Builders & Submission Scripts (not needed for core app execution)
-# *kaggle*
-# *KAGGLE*
-# *.ipynb
+kaggle_submission.ipynb
+build_kaggle_notebook.py
+kaggle_submission_cell.py
 
 # Temporary / Scratch Planning, Build & Old CLI Files
 PLAN*.md

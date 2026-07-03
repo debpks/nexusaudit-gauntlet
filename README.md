@@ -131,7 +131,7 @@ export GEMINI_API_KEY="your-gemini-api-key"
 ```
 
 ### 2. ⚡ Kaggle Static & Interactive Notebook Execution (For Course Judges)
-We provide a complete, beautifully formatted Jupyter Notebook ready for Kaggle import: `kaggle_submission.ipynb` (also available as `nexusaudit_gauntlet_kaggle_submission.ipynb`). Simply upload this notebook to Kaggle, configure your `GEMINI_API_KEY` under Kaggle User Secrets, and run all cells!
+We provide a complete, beautifully formatted Jupyter Notebook ready for Kaggle import: `nexusaudit_gauntlet_kaggle_submission.ipynb`. Simply upload this notebook to Kaggle, configure your `GEMINI_API_KEY` under Kaggle User Secrets, and run all cells!
 
 Alternatively, you can copy & paste our zero-configuration turnkey cell script `kaggle_submission_cell.py` into Cell 1 of any blank notebook or run it locally:
 ```bash
