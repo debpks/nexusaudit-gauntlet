@@ -47,8 +47,16 @@ class ADKPolicyParser(BaseAgent):
         super().__init__(name="Policy_Parser")
         self.core_agent = core_agent
     def __call__(self, state: dict):
+        print("\n" + "="*70)
+        print("STAGE 1: 📜 POLICY PARSER AGENT (Gemini 2.5 Flash)")
+        print("="*70)
+        print(f"Target System : {state.get('system_name')}")
+        print("Analyzing specifications and extracting verifiable regulatory claims...")
         claim = self.core_agent.parse_system(state["system_name"], state["system_description"])
         state["claim"] = claim
+        print(f"✅ Claim Extracted -> Status: {getattr(claim, 'claimed_status', 'N/A')}")
+        print(f"   Target Clause : {getattr(claim, 'target_clause', 'N/A')}")
+        print(f"   Claim Analysis: {getattr(claim, 'hypothesis', 'N/A')}")
         return state
 
 class ADKThreatModeler(BaseAgent):
@@ -56,8 +64,14 @@ class ADKThreatModeler(BaseAgent):
         super().__init__(name="Threat_Modeler")
         self.core_agent = core_agent
     def __call__(self, state: dict):
+        print("\n" + "="*70)
+        print("STAGE 2: 🎯 THREAT MODELER AGENT (Gemini 2.5 Pro)")
+        print("="*70)
+        print("Formulating adversarial red-team hypothesis against target clause...")
         hypothesis = self.core_agent.model_threat(state["system_name"], state["system_description"], state["claim"])
         state["hypothesis"] = hypothesis
+        print(f"✅ Threat Hypothesis Formulated -> Target Clause: {getattr(hypothesis, 'target_clause', 'N/A')}")
+        print(f"   Attack Strategy: {getattr(hypothesis, 'hypothesis', 'N/A')}")
         return state
 
 class ADKRedTeamSimulator(BaseAgent):
@@ -65,8 +79,14 @@ class ADKRedTeamSimulator(BaseAgent):
         super().__init__(name="Red_Team_Simulator")
         self.core_agent = core_agent
     def __call__(self, state: dict):
+        print("\n" + "="*70)
+        print("STAGE 3: ⚔️ RED-TEAM SIMULATOR AGENT (Gemini 2.5 Pro - Creative)")
+        print("="*70)
+        print("Synthesizing multi-turn adversarial prompt injection scenario...")
         scenario = self.core_agent.generate_scenario(state["system_name"], state["system_description"], state["hypothesis"])
         state["scenario"] = scenario
+        print(f"✅ Attack Scenario Generated -> Target Clause: {getattr(scenario, 'target_clause', 'N/A')}")
+        print(f"   Adversarial Payload: {getattr(scenario, 'scenario_description', 'N/A')}")
         return state
 
 class ADKEvaluator(BaseAgent):
@@ -74,11 +94,18 @@ class ADKEvaluator(BaseAgent):
         super().__init__(name="Evaluator")
         self.core_agent = core_agent
     def __call__(self, state: dict):
+        print("\n" + "="*70)
+        print("STAGE 4: ⚖️ EVALUATOR AGENT & LIVE TARGET BOT EXECUTION")
+        print("="*70)
+        print("Executing attack against target chatbot and evaluating regulatory compliance...")
         evaluation = self.core_agent.evaluate(
             state["system_name"], state["system_description"], 
             state["claim"], state["hypothesis"], state["scenario"], round_num=1
         )
         state["evaluation"] = evaluation
+        print(f"✅ Evaluation Complete -> Verdict: {getattr(evaluation, 'clause_status', 'N/A')}")
+        print(f"   Risk Severity  : {getattr(evaluation, 'severity', 'N/A').upper()}")
+        print(f"   Audit Evidence : {getattr(evaluation, 'evidence', 'N/A')}")
         return state
 
 class ADKHumanApprovalNode(BaseAgent):
@@ -136,6 +163,9 @@ class ADKGauntletWorkflow:
         self.pipeline = SequentialAgent(agents=[adk_parser, adk_modeler, adk_simulator, adk_evaluator, adk_hitl])
 
     def execute_audit(self, system_name: str, system_description: str):
+        print(f"\n==============================================================")
+        print(f"🔄 [ADK GAUNTLET INITIATED] Target System: {system_name}")
+        print(f"==============================================================")
         initial_state = {
             "system_name": system_name,
             "system_description": system_description
