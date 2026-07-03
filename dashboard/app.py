@@ -44,9 +44,22 @@ def get_loop_agent():
         loop_agent = LoopAgent(kb_path=KB_PATH)
     return loop_agent
 
+def get_test_systems():
+    systems_dir = os.path.abspath(os.path.join(DASHBOARD_DIR, "..", "eval", "test_systems"))
+    systems = {}
+    for filepath in sorted(glob.glob(os.path.join(systems_dir, "*.json"))):
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                key = os.path.splitext(os.path.basename(filepath))[0]
+                systems[key] = data
+        except Exception:
+            pass
+    return systems
+
 @app.route('/')
 def index():
-    return render_template('index.html', scenarios=DEMO_SCENARIOS)
+    return render_template('index.html', scenarios=DEMO_SCENARIOS, test_systems=get_test_systems())
 
 @app.route('/about')
 def about():
@@ -389,8 +402,26 @@ def run_demo_stream():
 
 @app.route('/run_adhoc', methods=['GET'])
 def run_adhoc_stream():
-    name = request.args.get('name', 'Ad-Hoc System Audit')
-    desc = request.args.get('desc', 'Custom system capability description submitted for red-team evaluation.')
+    sys_id = request.args.get('sys_id', '').strip() if request.args.get('sys_id') else ''
+    name = request.args.get('name', '').strip() if request.args.get('name') else ''
+    desc = request.args.get('desc', '').strip() if request.args.get('desc') else ''
+    
+    valid_systems = get_test_systems()
+    
+    if sys_id and sys_id in valid_systems:
+        name = valid_systems[sys_id].get('name')
+        desc = valid_systems[sys_id].get('description')
+    else:
+        is_valid = False
+        for sys_data in valid_systems.values():
+            if sys_data.get('name') == name or sys_data.get('description') == desc:
+                is_valid = True
+                name = sys_data.get('name')
+                desc = sys_data.get('description')
+                break
+        if not is_valid:
+            return jsonify({"error": "Validation failed: Target System must be one of the predefined target systems in project scope."}), 400
+            
     scenario = {"name": name, "description": desc}
     return Response(stream_scenario_execution(scenario), mimetype='text/event-stream')
 
