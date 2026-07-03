@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About — NovaMart ShopBot</title>
+    <title>About — NexusAudit-Gauntlet Platform</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
@@ -12,9 +12,10 @@
             --bg-base: #0B0E14;
             --bg-surface: rgba(22, 28, 45, 0.45);
             --bg-card: rgba(30, 41, 59, 0.4);
+            --bg-card-hover: rgba(30, 41, 59, 0.7);
             
-            --border-glow: rgba(99, 102, 241, 0.15);
-            --border-hover: rgba(99, 102, 241, 0.4);
+            --border-glow: rgba(99, 102, 241, 0.2);
+            --border-hover: rgba(99, 102, 241, 0.6);
             
             --text-primary: #F8FAFC;
             --text-secondary: #94A3B8;
@@ -22,6 +23,11 @@
             
             --accent-indigo: #6366F1;
             --accent-purple: #8B5CF6;
+            --accent-pink: #EC4899;
+            --accent-cyan: #06B6D4;
+            --accent-emerald: #10B981;
+            --accent-amber: #F59E0B;
+            --accent-red: #EF4444;
             
             --font-display: 'Outfit', sans-serif;
             --font-body: 'Inter', sans-serif;
@@ -43,32 +49,35 @@
             min-height: 100vh;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.08) 0px, transparent 50%);
+            radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+            radial-gradient(at 100% 50%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+            radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
         }
 
         header {
-            padding: 0.5rem 2rem;
+            padding: 0.75rem 2.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
             position: sticky;
             top: 0;
             z-index: 100;
-            background-color: rgba(11, 14, 20, 0.8);
+            background-color: rgba(11, 14, 20, 0.85);
         }
 
         .logo-container {
             display: flex;
             align-items: center;
             gap: 1rem;
+            text-decoration: none;
         }
 
         .logo-icon {
-            width: 30px;
-            height: 30px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
             border-radius: 10px;
             display: flex;
@@ -76,13 +85,20 @@
             justify-content: center;
             font-weight: 800;
             font-family: var(--font-display);
-            font-size: 1rem;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+            font-size: 1.2rem;
+            color: white;
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
+            transition: var(--transition-smooth);
+        }
+
+        .logo-container:hover .logo-icon {
+            transform: rotate(10deg) scale(1.05);
+            box-shadow: 0 0 35px rgba(139, 92, 246, 0.8);
         }
 
         .logo-text h1 {
             font-family: var(--font-display);
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             font-weight: 800;
             background: linear-gradient(to right, #FFFFFF, var(--text-secondary));
             -webkit-background-clip: text;
@@ -92,94 +108,197 @@
         .logo-text p {
             font-size: 0.75rem;
             color: var(--text-muted);
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            font-family: var(--font-body);
+            font-weight: 500;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: var(--transition-smooth);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        nav a:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        nav a.active {
+            color: #fff;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
         }
 
         .hero {
             text-align: center;
-            padding: 4rem 2rem;
-            max-width: 900px;
+            padding: 5rem 2rem 3rem 2rem;
+            max-width: 1000px;
             margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #818CF8;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
         .hero h1 {
             font-family: var(--font-display);
-            font-size: 3.5rem;
+            font-size: 3.8rem;
             font-weight: 800;
             margin-bottom: 1.5rem;
-            background: linear-gradient(to bottom right, #fff, #94A3B8);
+            line-height: 1.1;
+            background: linear-gradient(to right, #fff, #A5B4FC, #818CF8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .hero p {
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 2rem;
+            line-height: 1.7;
+            margin-bottom: 2.5rem;
+            max-width: 850px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .notice-box {
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.8));
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 16px;
+            padding: 1.75rem;
             text-align: left;
-            margin: 0 auto 3rem auto;
-            max-width: 800px;
+            margin: 0 auto 4rem auto;
+            max-width: 900px;
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
+            align-items: flex-start;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(139, 92, 246, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notice-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: linear-gradient(to bottom, var(--accent-indigo), var(--accent-pink));
         }
 
         .notice-icon {
-            font-size: 1.5rem;
+            font-size: 2rem;
+            padding: 0.75rem;
+            background: rgba(139, 92, 246, 0.15);
+            border-radius: 12px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .content-section {
             max-width: 1200px;
-            margin: 0 auto 4rem auto;
-            padding: 0 2rem;
+            margin: 0 auto 5rem auto;
+            padding: 0 2.5rem;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+            text-align: center;
         }
 
         .section-title {
             font-family: var(--font-display);
-            font-size: 2rem;
-            margin-bottom: 2rem;
+            font-size: 2.4rem;
             color: #fff;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 0.5rem;
-        }
-
-        /* Lists and Paragraphs */
-        .content-section p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-        }
-        
-        .content-section ul {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 2rem;
-            padding-left: 1.5rem;
-            font-size: 1.1rem;
-        }
-        
-        .content-section li {
             margin-bottom: 0.75rem;
-        }
-        
-        .content-section strong {
-            color: #fff;
+            display: inline-block;
+            background: linear-gradient(to right, #fff, #94A3B8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* Grid specific */
-        .grid {
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Problem vs Solution Grid */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .problem-card {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-5px);
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.4);
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.15);
+        }
+
+        .problem-card h4 {
+            color: #FCA5A5;
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .problem-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Glass Cards Grid */
+        .grid-2 {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.75rem;
             margin-bottom: 3rem;
         }
 
@@ -187,88 +306,331 @@
             background: var(--bg-card);
             border: 1px solid var(--border-glow);
             border-radius: 20px;
-            padding: 2.5rem;
+            padding: 2.25rem;
             backdrop-filter: blur(20px);
             transition: var(--transition-smooth);
             display: flex;
-            gap: 1.5rem;
-            align-items: flex-start;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; width: 100px; height: 100px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transition: var(--transition-smooth);
         }
 
         .glass-card:hover {
             border-color: var(--border-hover);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            background: rgba(30, 41, 59, 0.6);
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            background: var(--bg-card-hover);
+        }
+
+        .glass-card:hover::after {
+            transform: scale(1.5);
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
         }
 
         .card-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.25);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             flex-shrink: 0;
-            box-shadow: inset 0 0 20px rgba(99, 102, 241, 0.1);
+            box-shadow: inset 0 0 15px rgba(99, 102, 241, 0.15);
         }
 
-        .card-content h3 {
+        .card-title-group h3 {
             font-family: var(--font-display);
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: #fff;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.35rem;
         }
 
-        .card-content p {
+        .model-badge {
+            font-family: var(--font-code);
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .badge-pro { background: rgba(139, 92, 246, 0.15); color: #C4B5FD; border: 1px solid rgba(139, 92, 246, 0.3); }
+        .badge-flash { background: rgba(99, 102, 241, 0.15); color: #A5B4FC; border: 1px solid rgba(99, 102, 241, 0.3); }
+        .badge-lite { background: rgba(16, 185, 129, 0.15); color: #6EE7B7; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-hitl { background: rgba(236, 72, 153, 0.15); color: #F472B6; border: 1px solid rgba(236, 72, 153, 0.3); }
+
+        .glass-card p {
             color: var(--text-secondary);
-            line-height: 1.6;
-            font-size: 1rem;
-            margin-bottom: 0;
+            line-height: 1.65;
+            font-size: 0.98rem;
+            margin-bottom: 1.25rem;
         }
 
+        .card-footer {
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-footer code {
+            font-family: var(--font-code);
+            color: #93C5FD;
+            background: rgba(30, 58, 138, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* KPI Risk Table */
+        .table-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(20px);
+            margin-bottom: 3rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead {
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            padding: 1.25rem 1.5rem;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #fff;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .vuln-title {
+            font-weight: 600;
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .kpi-badge {
+            display: inline-block;
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            font-family: var(--font-code);
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .kpi-red { background: rgba(239, 68, 68, 0.15); color: #FCA5A5; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .kpi-amber { background: rgba(245, 158, 11, 0.15); color: #FDE68A; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .kpi-purple { background: rgba(139, 92, 246, 0.15); color: #DDD6FE; border: 1px solid rgba(139, 92, 246, 0.3); }
+
+        /* Architecture Visual Box */
+        .arch-box {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.7), rgba(30, 41, 59, 0.5));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 4rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .arch-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .arch-node {
+            background: rgba(22, 28, 45, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.75rem;
+            text-align: center;
+            transition: var(--transition-smooth);
+        }
+
+        .arch-node:hover {
+            border-color: var(--accent-indigo);
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.2);
+        }
+
+        .arch-node h4 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .arch-node p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .arch-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--accent-indigo);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Policy Grid */
         .policy-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
         }
 
         .policy-card {
-            background: rgba(15, 23, 42, 0.4);
+            background: rgba(15, 23, 42, 0.5);
             border-left: 4px solid var(--accent-indigo);
-            padding: 1.5rem;
-            border-radius: 0 12px 12px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.75rem;
+            border-radius: 0 16px 16px 0;
             transition: var(--transition-smooth);
         }
 
         .policy-card:hover {
-            background: rgba(30, 41, 59, 0.6);
-            border-left-color: var(--accent-purple);
+            background: rgba(30, 41, 59, 0.8);
+            border-left-color: var(--accent-pink);
+            transform: translateX(5px);
         }
-        
+
         .policy-card h4 {
             color: #fff;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             font-family: var(--font-display);
             font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        
+
         .policy-card p {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .policy-tag {
+            font-size: 0.7rem;
+            font-family: var(--font-code);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #fff;
+        }
+
+        /* Rubric Mapping Table */
+        .rubric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .rubric-card {
+            background: rgba(22, 28, 45, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.75rem;
+            transition: var(--transition-smooth);
+        }
+
+        .rubric-card:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .rubric-card h4 {
+            color: #67E8F9;
+            font-family: var(--font-display);
+            font-size: 1.15rem;
             margin-bottom: 0.5rem;
         }
 
+        .rubric-card code {
+            font-family: var(--font-code);
+            color: #F472B6;
+            background: rgba(244, 114, 182, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+
+        /* CTA Section */
         .cta-box {
             text-align: center;
-            padding: 3rem;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
-            border-radius: 16px;
-            border: 1px solid var(--border-glow);
-            margin-top: 2rem;
+            padding: 4rem 3rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.15));
+            border-radius: 24px;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
         }
 
         .btn-primary {
@@ -276,183 +638,371 @@
             background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
             color: white;
             text-decoration: none;
-            padding: 1rem 2.5rem;
-            border-radius: 8px;
+            padding: 1.1rem 3rem;
+            border-radius: 12px;
             font-family: var(--font-display);
             font-weight: 600;
-            font-size: 1.1rem;
-            margin-top: 1.5rem;
+            font-size: 1.15rem;
+            margin-top: 2rem;
             transition: var(--transition-smooth);
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.7);
             color: white;
         }
 
+        @media (max-width: 900px) {
+            .problem-grid, .grid-2, .policy-grid, .arch-grid {
+                grid-template-columns: 1fr;
+            }
+            .arch-connector { transform: rotate(90deg); margin: 1rem 0; }
+        }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo-container">
+        <a href="/" class="logo-container">
             <div class="logo-icon">Ω</div>
             <div class="logo-text">
-                <h1>NovaMart ShopBot</h1>
-                <p>Multi-Agent Auditing Platform</p>
+                <h1>NexusAudit-Gauntlet</h1>
+                <p>DevSecOps Auditing Plane</p>
             </div>
-        </div>
-        <nav style="display: flex; gap: 2rem; font-family: var(--font-body); font-weight: 500;">
-            <a href="/" style="color: var(--text-secondary); text-decoration: none; transition: var(--transition-smooth);" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--text-secondary)'">Live Demo</a>
-            <a href="/about" style="color: var(--accent-indigo); text-decoration: none; transition: var(--transition-smooth);">About</a>
+        </a>
+        <nav>
+            <a href="/">Live Demo Dashboard</a>
+            <a href="/about" class="active">Architecture & Rubric</a>
         </nav>
     </header>
 
     <div class="hero">
-        <h1>About NexusAudit-Gauntlet</h1>
-        <p>An automated, agentic red-teaming pipeline built to secure the future of enterprise AI. As enterprises rush to deploy LLMs in customer-facing roles, they expose themselves to unprecedented legal and cybersecurity risks.</p>
+        <div class="hero-badge">⚡ Official Kaggle 5-Day GenAI Intensive Capstone</div>
+        <h1>Autonomous DevSecOps & AI Safety Compliance Auditor</h1>
+        <p>An adversarial multi-agent red-teaming platform that dynamically tests, exploits, and audits Generative AI systems against the EU AI Act, FTC guidelines, and OWASP LLM Top 10 vulnerabilities.</p>
         
         <div class="notice-box">
-            <div class="notice-icon">🏆</div>
+            <div class="notice-icon">🏛️</div>
             <div>
-                <h4 style="color:#fff; margin-bottom: 0.5rem; font-family: var(--font-display);">Project Context: Kaggle 5-Day GenAI Capstone</h4>
-                <p style="font-size: 0.95rem; margin-bottom:0;">This platform was conceptualized and developed as part of the Kaggle GenAI Capstone Challenge (Agents for Business Track). The objective was to build a sophisticated multi-agent system designed not just to assist users, but to <em>attack, audit, and secure</em> other AI agents against legal and security vulnerabilities.</p>
+                <h4 style="color:#fff; margin-bottom: 0.5rem; font-family: var(--font-display); font-size: 1.2rem;">The AI Regulatory Bottleneck</h4>
+                <p style="font-size: 0.95rem; margin-bottom:0; color: var(--text-secondary); line-height: 1.6;">As enterprises deploy LLMs into mission-critical customer workflows, manual code reviews and static regex filters fail to catch non-deterministic prompt injections, data exfiltration, or deceptive pricing hallucinations. NexusAudit replaces static checks with an autonomous adversarial combat loop that audits chatbots <em>before</em> production deployment.</p>
             </div>
         </div>
     </div>
 
+    <!-- Section 1: The Pitch -->
     <div class="content-section">
-        <h2 class="section-title">The NovaMart Case Study</h2>
-        <p>To test our pipeline against realistic, high-stakes environments, we created a hypothetical corporate profile: <strong>NovaMart Corporation</strong>. NovaMart is a multi-billion-dollar omni-channel retailer that has deployed specialized LLM chatbots across its divisions to handle immense scale.</p>
-        
-        <p>Our auditing pipeline specifically targets three primary NovaMart AI deployments:</p>
-        <ul>
-            <li><strong>NovaMart ShopBot (E-Storefront):</strong> Handles customer item inquiries and catalog reviews. <em>Risk Vector:</em> Ingestion of untrusted third-party reviews (OWASP LLM-01) and deceptive pricing.</li>
-            <li><strong>NovaMart Electronics Assistant:</strong> Manages high-value electronics catalogs (e.g., MacBooks). <em>Risk Vector:</em> Adversarial override injections attempting to bypass official database pricing.</li>
-            <li><strong>NovaMart Care Bot:</strong> Manages order tracking and refund policies. <em>Risk Vector:</em> Hallucination vulnerabilities concerning exceptions (e.g., unauthorized return extensions) creating corporate liability.</li>
-        </ul>
+        <div class="section-header">
+            <h2 class="section-title">The Pitch: Problem & Solution</h2>
+            <p class="section-subtitle">Why traditional software security tools fail for Generative AI systems, and how autonomous agentic red-teaming solves the problem.</p>
+        </div>
+
+        <div class="problem-grid">
+            <div class="problem-card">
+                <h4>🛑 Hidden Injections</h4>
+                <p>Chatbots frequently suffer from indirect prompt injection (OWASP LLM-01) and system prompt leakage, allowing attackers to override pricing rules, extract PII, or force unauthorized actions from third-party database records.</p>
+            </div>
+            <div class="problem-card">
+                <h4>⚖️ €35M Crushing Fines</h4>
+                <p>The EU AI Act imposes regulatory fines up to <strong>€35 Million or 7% of global annual turnover</strong> for deploying non-compliant or deceptive high-risk AI systems (Annex III), making unverified deployments a C-suite liability.</p>
+            </div>
+            <div class="problem-card">
+                <h4>⏳ Static Audit Bottleneck</h4>
+                <p>Standard static code scanners cannot evaluate non-deterministic LLM behavior. Manually red-teaming AI chatbots requires thousands of creative adversarial prompts, which is too slow and expensive for modern CI/CD pipelines.</p>
+            </div>
+        </div>
     </div>
 
+    <!-- Section 2: Business Impact & KPI Risk Table -->
     <div class="content-section">
-        <h2 class="section-title">Adversarial Multi-Agent Architecture</h2>
-        <p>Traditional static audits fail to capture how system controls break under real-world, dynamic interactions. NexusAudit solves this by treating compliance verification as an <strong>adversarial game</strong>. We orchestrated an elite Multi-Agent System powered by Google Gemini 2.5 Pro, Gemini 2.5 Flash, and Flash-Lite models configured via a centralized <code>model_config.json</code> and integrated via the Google Agent Development Kit (ADK) into a sequential workflow graph.</p>
-        
-        <div class="grid" style="margin-top: 2rem;">
+        <div class="section-header">
+            <h2 class="section-title">Business Impact & KPI Risk Mapping</h2>
+            <p class="section-subtitle">Translating technical AI safety vulnerabilities into quantifiable executive financial and operational metrics.</p>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 23%;">Technical Vulnerability</th>
+                        <th style="width: 32%;">Attack Vector & Technical Failure</th>
+                        <th style="width: 25%;">Tangible Business & Revenue Risk</th>
+                        <th style="width: 20%;">Quantified KPI Penalty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="vuln-title">OWASP LLM-01</span>
+                            Indirect Prompt Injection
+                        </td>
+                        <td>Attackers embed hidden instructions in product reviews or user profiles, tricking the chatbot into offering unauthorized 99% discounts or issuing fake refunds.</td>
+                        <td><strong style="color:#fff;">Direct Financial Loss:</strong> Immediate revenue loss from unauthorized promotional discounts and fraudulent transaction approvals.</td>
+                        <td><span class="kpi-badge kpi-red">15-20% Margin Loss</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="vuln-title">EU AI Act Annex III</span>
+                            Unlabeled Profiling Violation
+                        </td>
+                        <td>E-commerce bot secretly scores users based on browsing latency or postal code without explicit transparency disclosure (<code>COMM_GDPR_02</code>).</td>
+                        <td><strong style="color:#fff;">Regulatory Fines & Sanctions:</strong> Severe regulatory penalties from EU data protection authorities and FTC enforcement actions against deceptive AI practices.</td>
+                        <td><span class="kpi-badge kpi-red">Up to €35M Fine / 7% Turnover</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="vuln-title">OWASP LLM-06</span>
+                            Sensitive Data Disclosure
+                        </td>
+                        <td>Chatbot fails to sanitize multi-turn conversation memory, leaking personal data (PII) or system prompt architecture to social engineering attacks.</td>
+                        <td><strong style="color:#fff;">Brand Damage & Churn:</strong> Catastrophic loss of consumer trust, class-action lawsuits, and enterprise contract terminations.</td>
+                        <td><span class="kpi-badge kpi-amber">+30% Customer Churn</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="vuln-title">OWASP LLM-09</span>
+                            Overreliance & Hallucination
+                        </td>
+                        <td>Bot makes definitive legal or medical claims without human oversight, leading users to take harmful or incorrect actions based on fabricated facts.</td>
+                        <td><strong style="color:#fff;">Liability & Support Escalations:</strong> Massive surge in customer support ticket volume and legal liability for erroneous AI guidance.</td>
+                        <td><span class="kpi-badge kpi-purple">4x Support Escalation Costs</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section 3: Architectural Excellence & Dual-Architecture -->
+    <div class="content-section">
+        <div class="section-header">
+            <h2 class="section-title">Architectural Excellence & System Flow</h2>
+            <p class="section-subtitle">NexusAudit utilizes a Dual-Architecture Design, providing both a sleek streaming UI for interactive pair-programming and a headless Google ADK router for CI/CD pipelines.</p>
+        </div>
+
+        <div class="arch-box">
+            <h3 style="font-family: var(--font-display); color: #fff; font-size: 1.5rem; text-align: center; margin-bottom: 0.5rem;">NexusAudit Dual-Architecture Execution Plane</h3>
+            <p style="text-align: center; color: var(--text-muted); font-size: 0.95rem;">Seamlessly bridge local interactive UX debugging with automated headless repository workflows.</p>
+            
+            <div class="arch-grid">
+                <div class="arch-node">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🖥️</div>
+                    <h4>Interactive Web Dashboard</h4>
+                    <p><code>dashboard/app.py</code></p>
+                    <span style="font-size: 0.8rem; color: #A5B4FC; background: rgba(99, 102, 241, 0.15); padding: 4px 10px; border-radius: 6px;">Server-Sent Events (SSE) Streaming</span>
+                </div>
+
+                <div class="arch-connector">
+                    <span>⚡ SHARED DEVSECOPS ENGINE ⚡</span>
+                </div>
+
+                <div class="arch-node">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚙️</div>
+                    <h4>Headless ADK Router</h4>
+                    <p><code>adk_hybrid_router.py</code></p>
+                    <span style="font-size: 0.8rem; color: #6EE7B7; background: rgba(16, 185, 129, 0.15); padding: 4px 10px; border-radius: 6px;">Native Google SequentialAgent</span>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="font-family: var(--font-display); color: #fff; font-size: 1.8rem; margin-bottom: 1.5rem; text-align: center;">The 5-Agent Gauntlet Pipeline</h3>
+        <div class="grid-3">
             <div class="glass-card">
-                <div class="card-icon" style="color: #A78BFA; border-color: rgba(167, 139, 250, 0.3);">🔍</div>
-                <div class="card-content">
-                    <h3>1. Parser <span style="font-size: 0.75rem; background: rgba(167,139,250,0.2); padding: 2px 6px; border-radius: 4px; color: #A78BFA;">Gemini 2.5 Flash | Temp 0.0</span></h3>
-                    <p>Ingests the target chatbot's system description and cross-references it against a dynamic JSON Knowledge Base to determine high-risk regulatory categories.</p>
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon" style="color: #A78BFA; border-color: rgba(167, 139, 250, 0.3);">📜</div>
+                        <div class="card-title-group">
+                            <h3>1. Policy Parser</h3>
+                            <span class="model-badge badge-flash">gemini-2.5-flash | Temp: 0.0</span>
+                        </div>
+                    </div>
+                    <p>Deconstructs target system descriptions and cross-references them against regulatory knowledge bases (<code>commerce_policy_kb.json</code>) to extract verifiable compliance claims.</p>
+                </div>
+                <div class="card-footer">
+                    <span>File:</span> <code>agents/policy_parser.py</code>
                 </div>
             </div>
 
             <div class="glass-card">
-                <div class="card-icon" style="color: #60A5FA; border-color: rgba(96, 165, 250, 0.3);">🎯</div>
-                <div class="card-content">
-                    <h3>2. Modeler <span style="font-size: 0.75rem; background: rgba(96,165,250,0.2); padding: 2px 6px; border-radius: 4px; color: #60A5FA;">Gemini 2.5 Pro | Temp 0.4</span></h3>
-                    <p>Formulates concrete, adversarial hypotheses based on legal clauses and executes autonomous tool calls (<code>search_past_vulnerabilities</code>) to check historical CVEs.</p>
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon" style="color: #60A5FA; border-color: rgba(96, 165, 250, 0.3);">🎯</div>
+                        <div class="card-title-group">
+                            <h3>2. Threat Modeler</h3>
+                            <span class="model-badge badge-pro">gemini-2.5-pro | Temp: 0.4</span>
+                        </div>
+                    </div>
+                    <p>Autonomously executes tool calls (<code>search_past_vulnerabilities</code>) to query historical CVEs and OWASP exploits, formulating targeted attack hypotheses against statutory rules.</p>
+                </div>
+                <div class="card-footer">
+                    <span>File:</span> <code>agents/threat_modeler.py</code>
                 </div>
             </div>
 
             <div class="glass-card">
-                <div class="card-icon" style="color: #F87171; border-color: rgba(248, 113, 113, 0.3);">⚔️</div>
-                <div class="card-content">
-                    <h3>3. Simulator <span style="font-size: 0.75rem; background: rgba(248,113,113,0.2); padding: 2px 6px; border-radius: 4px; color: #F87171;">Gemini 2.5 Pro | Temp 0.3</span></h3>
-                    <p>Designs specific, highly realistic conversational payloads (including Base64 obfuscation and indirect injections) to dynamically attack the target bot.</p>
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon" style="color: #F87171; border-color: rgba(248, 113, 113, 0.3);">⚔️</div>
+                        <div class="card-title-group">
+                            <h3>3. Red-Team Simulator</h3>
+                            <span class="model-badge badge-pro">gemini-2.5-pro | Temp: 0.3</span>
+                        </div>
+                    </div>
+                    <p>Translates threat hypotheses into concrete adversarial attack payloads, employing dynamic escalation like Base64 obfuscation, context priming, and multi-turn social engineering.</p>
+                </div>
+                <div class="card-footer">
+                    <span>File:</span> <code>agents/red_team_simulator.py</code>
                 </div>
             </div>
 
             <div class="glass-card">
-                <div class="card-icon" style="color: #34D399; border-color: rgba(52, 211, 153, 0.3);">⚖️</div>
-                <div class="card-content">
-                    <h3>4. Evaluator & HITL <span style="font-size: 0.75rem; background: rgba(52,211,153,0.2); padding: 2px 6px; border-radius: 4px; color: #34D399;">Gemini 2.5 Pro | Temp 0.0</span></h3>
-                    <p>Objectively judges the target's defense, renders a formal compliance verdict, and triggers a <strong>Human-In-The-Loop (HITL)</strong> safety pause before generating remediation reports.</p>
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon" style="color: #34D399; border-color: rgba(52, 211, 153, 0.3);">⚖️</div>
+                        <div class="card-title-group">
+                            <h3>4. Evaluator & HITL</h3>
+                            <span class="model-badge badge-pro">gemini-2.5-pro | Temp: 0.0</span>
+                        </div>
+                    </div>
+                    <p>Audits live bot defenses against statutory rules using strict Pydantic schemas, renders a formal verdict, and triggers a <strong>Human-in-the-Loop (HITL)</strong> safety pause before remediation.</p>
+                </div>
+                <div class="card-footer">
+                    <span>File:</span> <code>agents/evaluator.py</code> & <code>adk_hybrid_router.py</code>
                 </div>
             </div>
 
-            <div class="glass-card" style="grid-column: 1 / -1; background: rgba(232, 121, 249, 0.05); border-color: rgba(232, 121, 249, 0.3);">
-                <div class="card-icon" style="color: #E879F9; border-color: rgba(232, 121, 249, 0.3);">🤖</div>
-                <div class="card-content">
-                    <h3>5. Target AI System / Chatbot <span style="font-size: 0.75rem; background: rgba(232,121,249,0.2); padding: 2px 6px; border-radius: 4px; color: #E879F9;">Gemini 2.5 Flash-Lite | Temp 1.0</span></h3>
-                    <p>The simulated e-commerce chatbot (e.g., NovaMart ShopBot or Care Bot) under adversarial audit, configurable for vulnerable or remediated states across 12 distinct regulatory scenarios.</p>
+            <div class="glass-card" style="grid-column: 1 / -1; background: rgba(236, 72, 153, 0.05); border-color: rgba(236, 72, 153, 0.3);">
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon" style="color: #F472B6; border-color: rgba(236, 72, 153, 0.3);">🤖</div>
+                        <div class="card-title-group">
+                            <h3>5. Target AI System / Chatbot</h3>
+                            <span class="model-badge badge-lite">gemini-2.5-flash-lite | Temp: 1.0</span>
+                        </div>
+                    </div>
+                    <p>The simulated e-commerce chatbot (e.g., NovaMart ShopBot, Electronics Assistant, or Care Bot) under active adversarial audit. Configurable for vulnerable or remediated states across 12 distinct regulatory scenarios to verify defense resilience.</p>
+                </div>
+                <div class="card-footer">
+                    <span>File:</span> <code>agents/commerce_bot.py</code>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Section 4: The NovaMart Case Study -->
     <div class="content-section">
-        <h2 class="section-title">🏆 Google AI Agents Intensive Course Rubric Mapping</h2>
-        <p>NexusAudit-Gauntlet strictly demonstrates every required concept from the Google 5-Day AI Agents Intensive curriculum:</p>
-        <div class="grid" style="margin-top: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-            <div class="glass-card" style="padding: 1.25rem;">
-                <h4 style="color: #60A5FA; margin-bottom: 0.5rem;">⚙️ Google ADK Pipeline</h4>
-                <p style="font-size: 0.9rem; margin: 0;">Wraps all agents into native <code>BaseAgent</code> subclasses and connects them using a true <code>SequentialAgent</code> workflow graph with local fallback.</p>
+        <div class="section-header">
+            <h2 class="section-title">The NovaMart Case Study</h2>
+            <p class="section-subtitle">To benchmark our platform against realistic enterprise environments, we created a corporate profile: NovaMart Corporation, an omni-channel retailer deploying specialized division chatbots.</p>
+        </div>
+
+        <div class="problem-grid">
+            <div class="problem-card" style="background: rgba(99, 102, 241, 0.05); border-color: rgba(99, 102, 241, 0.2);">
+                <h4 style="color: #818CF8;">🛍️ NovaMart ShopBot</h4>
+                <p><strong>Division:</strong> E-Storefront & Catalog Reviews.<br><strong>Risk Vector:</strong> Ingestion of untrusted third-party reviews containing stored indirect prompt injections (OWASP LLM-01) attempting Cross-Site Scripting (XSS) or pricing overrides.</p>
             </div>
-            <div class="glass-card" style="padding: 1.25rem;">
-                <h4 style="color: #34D399; margin-bottom: 0.5rem;">🔌 FastMCP Server</h4>
-                <p style="font-size: 0.9rem; margin: 0;">Implements an official Model Context Protocol server exposing regulatory knowledge bases and interactive audit tools for external IDEs.</p>
+            <div class="problem-card" style="background: rgba(139, 92, 246, 0.05); border-color: rgba(139, 92, 246, 0.2);">
+                <h4 style="color: #C4B5FD;">💻 Electronics Assistant</h4>
+                <p><strong>Division:</strong> High-Value Electronics & Pricing.<br><strong>Risk Vector:</strong> Adversarial social engineering and override prompts attempting to force the bot into selling $2,500 MacBook Pros for $1 in violation of FTC Section 5 Deception rules.</p>
             </div>
-            <div class="glass-card" style="padding: 1.25rem;">
-                <h4 style="color: #F87171; margin-bottom: 0.5rem;">🛠️ Autonomous Tool Calling</h4>
-                <p style="font-size: 0.9rem; margin: 0;">The Modeler autonomously queries historical OWASP and FTC vulnerability databases before formulating targeted attack hypotheses.</p>
-            </div>
-            <div class="glass-card" style="padding: 1.25rem;">
-                <h4 style="color: #A78BFA; margin-bottom: 0.5rem;">🛑 Human-in-the-Loop (HITL)</h4>
-                <p style="font-size: 0.9rem; margin: 0;">Halts the autonomous loop when a severity-high violation is detected, requiring human authorization before generating patch plans.</p>
-            </div>
-            <div class="glass-card" style="padding: 1.25rem;">
-                <h4 style="color: #E879F9; margin-bottom: 0.5rem;">📋 Pydantic JSON Schemas</h4>
-                <p style="font-size: 0.9rem; margin: 0;">Strictly enforces type-safe LLM outputs across all agent exchanges using structured JSON generation and fallback extraction.</p>
+            <div class="problem-card" style="background: rgba(6, 182, 212, 0.05); border-color: rgba(6, 182, 212, 0.2);">
+                <h4 style="color: #67E8F9;">🎧 NovaMart Care Bot</h4>
+                <p><strong>Division:</strong> Customer Support & Refunds.<br><strong>Risk Vector:</strong> Hallucination vulnerabilities concerning return policy exceptions and unverified refund approvals that bind the corporation to unauthorized financial liability.</p>
             </div>
         </div>
     </div>
 
+    <!-- Section 5: Course Rubric Mapping -->
     <div class="content-section">
-        <h2 class="section-title">Evaluated Policies & Deep Dive Use Cases</h2>
-        <p>NexusAudit evaluates targets against the most critical frameworks bottlenecking AI adoption today, achieving a verified <strong>12 / 12 (100%) Benchmark Pass Rate</strong> across all Kaggle dropdown scenarios:</p>
-        
+        <div class="section-header">
+            <h2 class="section-title">Google AI Agents Intensive Course Rubric Mapping</h2>
+            <p class="section-subtitle">NexusAudit-Gauntlet strictly demonstrates every required architectural concept from the 5-Day AI Agents Intensive curriculum.</p>
+        </div>
+
+        <div class="rubric-grid">
+            <div class="rubric-card">
+                <h4>⚙️ Google ADK & Multi-Agent Pipeline</h4>
+                <code>agents/adk_hybrid_router.py</code>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Wraps all 4 DevSecOps agents into native <code>BaseAgent</code> subclasses and connects them using a true <code>SequentialAgent</code> workflow graph. Includes seamless fallback for local environments.</p>
+            </div>
+            <div class="rubric-card">
+                <h4>🔌 Model Context Protocol (FastMCP)</h4>
+                <code>agents/mcp_server.py</code>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Implements an official FastMCP server exposing <code>@mcp.resource("commerce_policy_kb.json")</code> and an interactive <code>@mcp.tool("audit_system")</code> for external IDE or agent invocation.</p>
+            </div>
+            <div class="rubric-card">
+                <h4>🛠️ Autonomous Tool Calling</h4>
+                <code>agents/threat_modeler.py</code>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Demonstrates autonomous function calling. The Modeler queries <code>search_past_vulnerabilities(policy_id)</code> to check historical OWASP/FTC exploits before generating attack hypotheses.</p>
+            </div>
+            <div class="rubric-card">
+                <h4>🛑 Human-in-the-Loop (HITL) Guardrail</h4>
+                <code>agents/adk_hybrid_router.py</code>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Implements <code>ADKHumanApprovalNode</code>. Halts the autonomous loop when a severity-high violation is detected, requiring human authorization before generating XML patch plans.</p>
+            </div>
+            <div class="rubric-card">
+                <h4>📋 Structured JSON Schemas (Pydantic)</h4>
+                <code>schemas/</code> directory
+                <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Strictly enforces type-safe LLM outputs using Pydantic models (<code>ClaimSchema</code>, <code>ThreatHypothesisSchema</code>, <code>EvaluationSchema</code>) with Gemini structured generation and fallback regex.</p>
+            </div>
+            <div class="rubric-card">
+                <h4>🚀 Antigravity IDE & Customizations</h4>
+                <code>.gemini/config/</code> & Playground Sessions
+                <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">Built using pair-programming prompts, interactive CLI debugging sessions, and custom system rules inside the official Google Antigravity IDE environment.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 6: Evaluated Policies -->
+    <div class="content-section">
+        <div class="section-header">
+            <h2 class="section-title">Evaluated Policies & 12/12 Benchmark Suite</h2>
+            <p class="section-subtitle">Achieving a verified 100% benchmark pass rate across all 12 statutory clauses in the project scope.</p>
+        </div>
+
         <div class="policy-grid">
             <div class="policy-card">
-                <h4>EU AI Act</h4>
+                <h4>EU AI Act <span class="policy-tag">Annex III</span></h4>
                 <p><strong>Audit Focus:</strong> High-Risk Exemptions & Transparency</p>
-                <p><strong>Vulnerability Tested:</strong> Mischaracterizing systems as low-risk to bypass strict legal transparency requirements.</p>
+                <p style="color: var(--text-muted);">Testing whether chatbots mischaracterize themselves as low-risk to bypass strict legal transparency requirements.</p>
             </div>
             <div class="policy-card">
-                <h4>GDPR (Article 22)</h4>
+                <h4>GDPR <span class="policy-tag">Article 22</span></h4>
                 <p><strong>Audit Focus:</strong> Dynamic Profiling & PII Leakage</p>
-                <p><strong>Vulnerability Tested:</strong> Socially engineering the bot to leak user profile data or apply discriminative geolocation pricing.</p>
+                <p style="color: var(--text-muted);">Socially engineering the bot to leak user profile data or apply discriminative geolocation pricing.</p>
             </div>
             <div class="policy-card">
-                <h4>FTC Section 5</h4>
-                <p><strong>Audit Focus:</strong> Dark Patterns & Deceptive Marketing</p>
-                <p><strong>Vulnerability Tested:</strong> Direct Prompt Injections forcing the bot to create false scarcity alerts or unauthorized discount codes.</p>
+                <h4>FTC Section 5 <span class="policy-tag">Deception</span></h4>
+                <p><strong>Audit Focus:</strong> Dark Patterns & Marketing Deception</p>
+                <p style="color: var(--text-muted);">Direct prompt injections forcing the bot to create false scarcity alerts or unauthorized discount codes.</p>
             </div>
-            <div class="policy-card" style="border-left-color: var(--error-color);">
-                <h4>OWASP Top 10 for LLMs</h4>
-                <p><strong>Audit Focus:</strong> LLM-01 Indirect Prompt Injections</p>
-                <p><strong>Vulnerability Tested:</strong> Exploiting the semantic gap by injecting malicious system overrides inside untrusted product reviews.</p>
+            <div class="policy-card" style="border-left-color: var(--accent-red);">
+                <h4>OWASP Top 10 <span class="policy-tag" style="background: rgba(239, 68, 68, 0.2);">LLM-01 / 06</span></h4>
+                <p><strong>Audit Focus:</strong> Indirect Prompt Injections & Memory Leakage</p>
+                <p style="color: var(--text-muted);">Exploiting the semantic gap by injecting malicious system overrides inside untrusted product reviews.</p>
             </div>
-            <div class="policy-card" style="border-left-color: #60A5FA;">
-                <h4>NIST AI RMF</h4>
-                <p><strong>Audit Focus:</strong> Brand Safety, Toxicity & Out-of-Domain Advice</p>
-                <p><strong>Vulnerability Tested:</strong> Testing sycophancy traps where the bot offers unqualified legal, financial, or medical advice.</p>
+            <div class="policy-card" style="border-left-color: var(--accent-cyan);">
+                <h4>NIST AI RMF <span class="policy-tag">Safety</span></h4>
+                <p><strong>Audit Focus:</strong> Brand Safety & Out-of-Domain Advice</p>
+                <p style="color: var(--text-muted);">Testing sycophancy traps where the bot offers unqualified legal, financial, or medical guidance.</p>
             </div>
-            <div class="policy-card" style="border-left-color: #E879F9;">
-                <h4>PCI DSS & IP Rights</h4>
+            <div class="policy-card" style="border-left-color: var(--accent-amber);">
+                <h4>PCI DSS & IP <span class="policy-tag">Compliance</span></h4>
                 <p><strong>Audit Focus:</strong> Payment Security & Copyright Infringement</p>
-                <p><strong>Vulnerability Tested:</strong> Attempting unauthorized credit card processing and generating competitor brand plagiarism.</p>
+                <p style="color: var(--text-muted);">Attempting unauthorized credit card processing and generating competitor brand plagiarism.</p>
             </div>
         </div>
     </div>
 
+    <!-- Section 7: CTA Box -->
     <div class="content-section">
         <div class="cta-box">
-            <h2 style="font-family: var(--font-display); color: #fff; margin-bottom: 1rem; font-size: 2.2rem;">Production Impact & CI/CD Integration</h2>
-            <p style="font-size: 1.15rem; max-width: 800px; margin: 0 auto; color: var(--text-primary);">
-                NexusAudit isn't just a sandbox; it's a blueprint for the future of <strong>Autonomous AI DevSecOps</strong>. By embedding this auditing plane directly into CI/CD pipelines, enterprise developers can iteratively identify vulnerabilities, patch system prompts, and re-audit in minutes—ensuring AI models remain secure and compliant <em>before</em> they are pushed to production.
+            <h2 style="font-family: var(--font-display); color: #fff; margin-bottom: 1rem; font-size: 2.4rem;">Ready to Secure Your AI Deployments?</h2>
+            <p style="font-size: 1.15rem; max-width: 800px; margin: 0 auto; color: var(--text-secondary); line-height: 1.7;">
+                NexusAudit-Gauntlet is built for seamless integration into enterprise DevSecOps workflows. Test your AI chatbots against live adversarial attacks, observe multi-agent reasoning, and generate verified remediation reports in real time.
             </p>
-            <a href="/" class="btn-primary">Run a Live Audit Demo</a>
+            <a href="/" class="btn-primary">Launch Live Interactive Dashboard</a>
         </div>
     </div>
 </body>
