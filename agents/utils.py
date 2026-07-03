@@ -61,7 +61,8 @@ def resolve_default_adc():
             if "429" in str(e) or "Too Many Requests" in str(e):
                 print("⚠️ [Kaggle Rate Limit] HTTP 429 (Too Many Requests) hit! Please wait 60 seconds before re-running.")
             pass
-        os.environ.setdefault("NO_GCE_CHECK", "true")
+        if "K_SERVICE" not in os.environ and "CLOUD_RUN_JOB" not in os.environ and "GAE_ENV" not in os.environ:
+            os.environ.setdefault("NO_GCE_CHECK", "true")
 
         std_adc = os.path.expanduser("~/.config/gcloud/application_default_credentials.json")
         if os.path.exists(std_adc):
