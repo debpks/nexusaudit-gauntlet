@@ -18,6 +18,8 @@ As enterprises rush to deploy Generative AI chatbots and autonomous agents into 
 2. **Regulatory crushing fines (EU AI Act & FTC):** The EU AI Act imposes fines up to **€35 Million or 7% of global annual turnover** for deploying non-compliant or deceptive high-risk AI systems (Annex III).
 3. **The Static Auditing Bottleneck:** Standard security tools and static code scanners cannot evaluate non-deterministic LLM behavior. Manually red-teaming AI chatbots requires thousands of creative adversarial prompts, which is too slow and expensive for modern CI/CD pipelines.
 
+![Story 1: Enterprise AI Vulnerability & Regulatory Fines](https://raw.githubusercontent.com/debpks/nexusaudit-gauntlet/main/assets/story_1_ai_risk.jpg)
+
 ### 💡 The Solution: NexusAudit-Gauntlet
 NexusAudit-Gauntlet is an autonomous DevSecOps red-teaming platform powered by a **4-Agent Google ADK Adversarial Loop** and **FastMCP Server** configured via a centralized `model_config.json`. Instead of static checks, our agents actively engage in multi-turn adversarial combat against target systems:
 *   **🤖 Policy Parser Agent (`gemini-2.5-flash` | Temp: 0.0):** Deconstructs regulatory knowledge bases (`commerce_policy_kb.json`) and evaluates the system's compliance claims.
@@ -25,6 +27,8 @@ NexusAudit-Gauntlet is an autonomous DevSecOps red-teaming platform powered by a
 *   **⚔️ Red-Team Simulator Agent (`gemini-2.5-pro` | Temp: 0.3):** Generates sophisticated, multi-turn adversarial scenarios (Base64 obfuscation, context priming, roleplay) to dynamically attack the target bot.
 *   **⚖️ Evaluator Agent & HITL Guardrail (`gemini-2.5-pro` | Temp: 0.0):** Judges the target's defense, generates legal/technical evidence, and triggers a **Human-in-the-Loop (HITL)** safety pause before generating remediation reports.
 *   **🎯 Target AI System / Chatbot (`gemini-2.5-flash-lite` | Temp: 1.0):** The simulated e-commerce chatbot under adversarial audit, configurable for vulnerable or remediated states.
+
+![Story 2: The 4-Agent DevSecOps Red-Teaming Gauntlet](https://raw.githubusercontent.com/debpks/nexusaudit-gauntlet/main/assets/story_2_four_agent_gauntlet.jpg)
 
 ---
 
@@ -76,6 +80,7 @@ graph TD
     F -->|Verdict: ESCALATE| C
 ```
 
+![Story 3: Autonomous Threat Modeling & FastMCP Tool Calling](https://raw.githubusercontent.com/debpks/nexusaudit-gauntlet/main/assets/story_3_threat_modeling.jpg)
 
 ### 2. Dual-Architecture: UI Streaming vs. Headless ADK Execution (ASCII Flowchart)
 
@@ -119,6 +124,10 @@ NexusAudit-Gauntlet strictly demonstrates every required concept from the Google
 | **Human-in-the-Loop (HITL) Guardrail** | `agents/adk_hybrid_router.py` | Implements `ADKHumanApprovalNode`. Halts the autonomous loop when a severity-high violation is detected, requiring human authorization (or `AUTO_APPROVE_HITL=true` override) before remediation. |
 | **Antigravity IDE & Customizations** | `.gemini/config/` & Playground Sessions | Built using pair-programming prompts, interactive CLI debugging sessions, and custom system rules inside the Google Antigravity IDE environment. |
 | **Structured JSON Schemas (Pydantic)** | `schemas/` | Strictly enforces type-safe LLM outputs using Pydantic models (`ClaimSchema`, `ThreatHypothesisSchema`, `RedTeamScenarioSchema`, `EvaluationSchema`) with Gemini structured generation. |
+
+![Story 4: Human-In-The-Loop Safety Guardrail](https://raw.githubusercontent.com/debpks/nexusaudit-gauntlet/main/assets/story_4_hitl_guardrail.jpg)
+
+![Story 5: Verified Compliance Certificate & Automated XML Remediation](https://raw.githubusercontent.com/debpks/nexusaudit-gauntlet/main/assets/story_5_compliance_certificate.jpg)
 
 ---
 

@@ -23,6 +23,8 @@ As enterprises rush to deploy Large Language Models (LLMs) and autonomous agents
 2. **Crushing Regulatory Fines (EU AI Act & FTC):** The EU AI Act imposes fines up to **€35 Million or 7% of global annual turnover** for deploying non-compliant or deceptive high-risk AI systems (Annex III).
 3. **The Static Auditing Bottleneck:** Standard security tools and static code scanners cannot evaluate non-deterministic LLM behavior. Manually red-teaming AI chatbots requires thousands of creative adversarial prompts, which is too slow and expensive for modern CI/CD pipelines.
 
+![Story 1: Enterprise AI Vulnerability & Regulatory Fines](https://raw.githubusercontent.com/debpks/nexusaudit-gauntlet/main/assets/story_1_ai_risk.jpg)
+
 ### 💡 The Solution: NexusAudit-Gauntlet
 **NexusAudit-Gauntlet** solves this real-world bottleneck. It is an autonomous DevSecOps red-teaming platform powered by a **4-Agent Google ADK Adversarial Loop** and **FastMCP Server** configured via a centralized `model_config.json`. Instead of static checks, our agents actively engage in multi-turn adversarial combat against target systems:
 *   **🤖 Policy Parser Agent (`gemini-2.5-flash` | Temp: 0.0):** Deconstructs regulatory knowledge bases (`commerce_policy_kb.json`) and evaluates the system's compliance claims.
@@ -30,6 +32,8 @@ As enterprises rush to deploy Large Language Models (LLMs) and autonomous agents
 *   **⚔️ Red-Team Simulator Agent (`gemini-2.5-pro` | Temp: 0.3):** Generates sophisticated, multi-turn adversarial scenarios (Base64 obfuscation, context priming, roleplay) to dynamically attack the target bot.
 *   **⚖️ Evaluator Agent & HITL Guardrail (`gemini-2.5-pro` | Temp: 0.0):** Judges the target's defense, generates legal/technical evidence, and triggers a **Human-in-the-Loop (HITL)** safety pause before generating remediation reports.
 *   **🎯 Target AI System / Chatbot (`gemini-2.5-flash-lite` | Temp: 1.0):** The simulated e-commerce chatbot under adversarial audit, configurable for vulnerable or remediated states across 12 statutory clauses.
+
+![Story 2: The 4-Agent DevSecOps Red-Teaming Gauntlet](https://raw.githubusercontent.com/debpks/nexusaudit-gauntlet/main/assets/story_2_four_agent_gauntlet.jpg)
 
 ---
 
@@ -109,6 +113,7 @@ NexusAudit-Gauntlet utilizes a **Dual-Architecture Design**, providing both a sl
                                +---------------------------+
 ```
 
+![Story 3: Autonomous Threat Modeling & FastMCP Tool Calling](https://raw.githubusercontent.com/debpks/nexusaudit-gauntlet/main/assets/story_3_threat_modeling.jpg)
 
 ### Dual-Architecture: UI Streaming vs. Headless ADK Execution
 
@@ -153,6 +158,8 @@ NexusAudit-Gauntlet strictly demonstrates every required concept from the Google
 | **Antigravity IDE & Customizations** | [.gemini/config/](.gemini/config/) | Built using pair-programming prompts, interactive CLI debugging sessions, and custom system rules inside the Google Antigravity IDE environment. |
 | **Structured JSON Schemas (Pydantic)** | [schemas/](schemas/) | Strictly enforces type-safe LLM outputs using Pydantic models (`ClaimSchema`, `ThreatHypothesisSchema`, `RedTeamScenarioSchema`, `EvaluationSchema`) with Gemini structured generation. |
 
+![Story 4: Human-In-The-Loop Safety Guardrail](https://raw.githubusercontent.com/debpks/nexusaudit-gauntlet/main/assets/story_4_hitl_guardrail.jpg)
+
 ---
 
 ## 🔬 5. Advanced Technical Implementation & 12/12 Benchmark Pass Rate
@@ -167,6 +174,8 @@ The `RedTeamSimulatorAgent` features dynamic complexity escalation. If the targe
 We evaluated NexusAudit against the **NovaMart Corporation** benchmark profile across 12 distinct statutory clauses (EU AI Act, GDPR, FTC Section 5, OWASP Top 10, NIST AI RMF, and PCI DSS). Our platform achieved a **100% verified classification accuracy (12/12 pass rate)**, successfully distinguishing between vulnerable and remediated chatbot architectures.
 
 Furthermore, our live dashboard features an **Ad-Hoc System Audit** mode, allowing engineers to select any of our 3 predefined Target Systems (**NovaMart ShopBot**, **Electronics Assistant**, or **Care Bot**) and audit them on the fly against any regulatory standard.
+
+![Story 5: Verified Compliance Certificate & Automated XML Remediation](https://raw.githubusercontent.com/debpks/nexusaudit-gauntlet/main/assets/story_5_compliance_certificate.jpg)
 
 ---
 
