@@ -27,6 +27,8 @@ sandbox_cli.py
 reports/
 *.jpg
 *.png
+!assets/
+!assets/*
 
 # Old Documentation & Drafts
 docs/
