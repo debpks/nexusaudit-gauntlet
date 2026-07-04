@@ -33,6 +33,11 @@ docs/
 CAPSTONE_WRITEUP.md
 
 
+# Testing and Evaluation Benchmark Suite (only keep test_systems for UI)
+eval/*
+!eval/test_systems/
+!eval/test_systems/*.json
+
 # IDE & OS specific files
 .vscode/
 .idea/
