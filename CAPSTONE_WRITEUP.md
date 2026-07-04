@@ -48,36 +48,64 @@ By translating technical AI safety vulnerabilities into tangible executive risk 
 
 NexusAudit-Gauntlet utilizes a **Dual-Architecture Design**, providing both a sleek, real-time streaming web UI for interactive pair-programming and a headless Google ADK `SequentialAgent` router for automated CI/CD pipelines.
 
-### The 4-Agent DevSecOps Red-Teaming Loop (Mermaid Diagram)
+### The 4-Agent DevSecOps Red-Teaming Loop (ASCII Architecture Flowchart)
 
-```mermaid
-graph TD
-    classDef parser fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#fff;
-    classDef modeler fill:#581c87,stroke:#a855f7,stroke-width:2px,color:#fff;
-    classDef simulator fill:#7f1d1d,stroke:#ef4444,stroke-width:2px,color:#fff;
-    classDef target fill:#065f46,stroke:#10b981,stroke-width:2px,color:#fff;
-    classDef evaluator fill:#713f12,stroke:#eab308,stroke-width:2px,color:#fff;
-    classDef hitl fill:#831843,stroke:#ec4899,stroke-width:2px,color:#fff;
-
-    A[User / CI-CD Pipeline Input] -->|System Specs & KB| B(Policy Parser Agent):::parser
-    B -->|Compliance Claim| C(Threat Modeler Agent):::modeler
-    
-    subgraph Tool Calling [MCP & External Tool Use]
-        C <-->|search_past_vulnerabilities| T[(OWASP / FTC CVE Database)]
-    end
-    
-    C -->|Threat Hypothesis| D(Red-Team Simulator Agent):::simulator
-    D -->|Adversarial Attack Payload| E[[Target AI System / Chatbot]]:::target
-    E -->|Chatbot Defense Output| F(Evaluator Agent):::evaluator
-    
-    F -->|Verdict: COMPLIANT| G[Audit Passed: Generate Proof Certificate]
-    F -->|Verdict: NON_COMPLIANT| H{HITL Safety Guardrail}:::hitl
-    
-    H -->|Human Approves| I[Generate Remediation Report & Patch Plan]
-    H -->|Human Denies| J[Halt Pipeline & Alert DevSecOps Team]
-    
-    F -->|Verdict: ESCALATE| C
 ```
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 NEXUSAUDIT 4-AGENT RED-TEAMING LOOP                                    │
+└───────────────────────────────────────────────────┬────────────────────────────────────────────────────┘
+                                                    │ [System Specs & Regulatory KB]
+                                                    ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 1️⃣ POLICY PARSER AGENT (gemini-2.5-flash | Temp: 0.0)                                                  │
+│    • Deconstructs target system instructions against regulatory statutes (EU AI Act, FTC, GDPR, OWASP) │
+│    • Outputs type-safe ClaimSchema isolating exact legal commitments                                   │
+└───────────────────────────────────────────────────┬────────────────────────────────────────────────────┘
+                                                    │ [Compliance Claim]
+                                                    ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 2️⃣ THREAT MODELER AGENT (gemini-2.5-pro | Temp: 0.4)                                                   │
+│    • Autonomously invokes external tool: search_past_vulnerabilities(policy_id)                        │
+│    • Queries FastMCP server (commerce_policy_kb.json) for historical CVEs & exploit vectors           │
+│    • Formulates adversarial attack hypothesis (ThreatHypothesisSchema)                                 │
+└───────────────────────────────────────────────────┬────────────────────────────────────────────────────┘
+                                                    │ [Threat Hypothesis]
+                                                    ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 3️⃣ RED-TEAM SIMULATOR AGENT (gemini-2.5-pro | Temp: 0.3)                                               │
+│    • Translates hypothesis into multi-turn attack payload (Base64 encoding, Stored XSS, roleplay)       │
+│    • Dynamically escalates attack complexity to test defense boundaries                                │
+└───────────────────────────────────────────────────┬────────────────────────────────────────────────────┘
+                                                    │ [Adversarial Attack Payload]
+                                                    ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 🎯 TARGET AI SYSTEM / CHATBOT (gemini-2.5-flash-lite | Temp: 1.0)                                      │
+│    • Simulated corporate chatbot (NovaMart ShopBot, Electronics Assistant, or Care Bot)                │
+│    • Configurable for vulnerable or remediated states across 12 statutory benchmarks                   │
+└───────────────────────────────────────────────────┬────────────────────────────────────────────────────┘
+                                                    │ [Chatbot Defense Output & Conversation Trace]
+                                                    ▼
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 4️⃣ EVALUATOR JUDGE AGENT (gemini-2.5-pro | Temp: 0.0)                                                  │
+│    • Impartial DevSecOps judge cross-referencing chatbot response against statutory legal text         │
+│    • Renders formal verdict: COMPLIANT, NON_COMPLIANT, or ESCALATE                                     │
+└─────────────────────────┬─────────────────────────────────────────────────┬────────────────────────────┘
+                          │ [Verdict: COMPLIANT]                            │ [Verdict: NON_COMPLIANT]
+                          ▼                                                 ▼
+┌───────────────────────────────────────────────────┐     ┌──────────────────────────────────────────────┐
+│ ✅ AUDIT PASSED                                   │     │ 🛑 HUMAN-IN-THE-LOOP (HITL) GUARDRAIL        │
+│ • Issue Cryptographic Proof Certificate           │     │ • Execution frozen via ADKHumanApprovalNode   │
+│ • Allow CI/CD Pipeline to Proceed                 │     │ • Awaiting DevSecOps Authorization           │
+└───────────────────────────────────────────────────┘     └───────────────────────┬──────────────────────┘
+                                                                                  │ [DevSecOps Approved]
+                                                                                  ▼
+                                                          ┌──────────────────────────────────────────────┐
+                                                          │ 🛠️ AUTO-REMEDIATION SYNTHESIZER              │
+                                                          │ • Generate XML Patch Delimiters              │
+                                                          │ • Output ready-to-merge developer patch      │
+                                                          └──────────────────────────────────────────────┘
+```
+
 
 ### Dual-Architecture: UI Streaming vs. Headless ADK Execution
 

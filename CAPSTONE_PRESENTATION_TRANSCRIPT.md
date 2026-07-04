@@ -71,15 +71,26 @@ To achieve true engineering rigor, we designed an **adversarial, game-theoretic 
 
 ### 🔬 The Exact Science of Model Selection & Temperature Tuning
 
-```mermaid
-flowchart LR
-    A[1. Policy Parser<br>gemini-2.5-flash<br>Temp: 0.0] --> B[2. Threat Modeler<br>gemini-2.5-pro<br>Temp: 0.4]
-    B -->|Calls FastMCP Tool| KB[(CVE Database)]
-    B --> C[3. Red-Team Simulator<br>gemini-2.5-pro<br>Temp: 0.3]
-    C --> D[4. Target Chatbot<br>gemini-2.5-flash-lite<br>Temp: 1.0]
-    D --> E[5. Evaluator Judge<br>gemini-2.5-pro<br>Temp: 0.0]
-    E -->|High Severity Detected| F[🛑 HITL Safety Guardrail]
-    F -->|DevSecOps Approved| G[XML Patch Synthesizer]
+```
+┌─────────────────────────┐       ┌─────────────────────────┐       ┌─────────────────────────┐
+│ 1. POLICY PARSER AGENT  │ ────► │ 2. THREAT MODELER AGENT │ ────► │ 3. RED-TEAM SIMULATOR   │
+│   gemini-2.5-flash      │       │   gemini-2.5-pro        │       │   gemini-2.5-pro        │
+│   Temp: 0.0             │       │   Temp: 0.4             │       │   Temp: 0.3             │
+└─────────────────────────┘       └────────────┬────────────┘       └────────────┬────────────┘
+                                               │ Calls FastMCP Tool              │
+                                               ▼                                 ▼
+                                  ┌─────────────────────────┐       ┌─────────────────────────┐
+                                  │   CVE / OWASP Database  │       │ 4. TARGET AI CHATBOT    │
+                                  │   (commerce_policy_kb)  │       │   gemini-2.5-flash-lite │
+                                  └─────────────────────────┘       │   Temp: 1.0             │
+                                                                    └────────────┬────────────┘
+                                                                                 │
+                                                                                 ▼
+┌─────────────────────────┐       ┌─────────────────────────┐       ┌─────────────────────────┐
+│ 🛠️ XML PATCH SYNTHESIZER │ ◄──── │ 🛑 HITL SAFETY GUARDRAIL│ ◄──── │ 5. EVALUATOR JUDGE      │
+│   Auto-Remediate Bot    │       │   DevSecOps Authorization│       │   gemini-2.5-pro        │
+└─────────────────────────┘       └─────────────────────────┘       │   Temp: 0.0             │
+                                                                    └─────────────────────────┘
 ```
 
 1. **Stage 1: The Policy Parser Agent (`gemini-2.5-flash` | Temperature: `0.0`)**
