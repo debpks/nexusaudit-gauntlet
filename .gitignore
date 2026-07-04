@@ -28,9 +28,8 @@ reports/
 *.jpg
 *.png
 
-# Old Documentation, Writeups & Drafts
+# Old Documentation & Drafts
 docs/
-CAPSTONE_WRITEUP.md
 
 
 # Testing and Evaluation Benchmark Suite (only keep test_systems for UI)
