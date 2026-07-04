@@ -78,27 +78,29 @@ graph TD
 ### 2. Dual-Architecture: UI Streaming vs. Headless ADK Execution (ASCII Flowchart)
 
 ```
-┌───────────────────────────────────────────────────────────────────────────────────┐
-│                           NEXUSAUDIT DUAL-ARCHITECTURE                            │
-└─────────────────────────────────────┬─────────────────────────────────────────────┘
-                                      │
-              ┌───────────────────────┴───────────────────────┐
-              ▼                                               ▼
-┌───────────────────────────┐                   ┌───────────────────────────┐
-│  INTERACTIVE WEB DASHBOARD │                   │   HEADLESS ADK ROUTER     │
-│   (dashboard/app.py)      │                   │ (adk_hybrid_router.py)    │
-├───────────────────────────┤                   ├───────────────────────────┤
-│ • Server-Sent Events (SSE)│                   │ • Native Google ADK       │
-│ • Real-time UX Streaming  │                   │ • SequentialAgent Pipeline│
-│ • Live Cyberpunk Trace UI │                   │ • Automated CI/CD Grading │
-└─────────────┬─────────────┘                   └─────────────┬─────────────┘
-              │                                               │
-              └───────────────────────┬───────────────────────┘
-                                      ▼
-┌───────────────────────────────────────────────────────────────────────────────────┐
-│                     CORE DEVSECOPS RED-TEAMING ENGINE                             │
-│  [Policy Parser] ──► [Threat Modeler + Tools] ──► [Red-Team Simulator] ──► [HITL] │
-└───────────────────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------+
+|              NEXUSAUDIT DUAL-ARCHITECTURE              |
++---------------------------+----------------------------+
+                            |
+             +--------------+--------------+
+             |                             |
+             v                             v
++--------------------------+  +--------------------------+
+| INTERACTIVE DASHBOARD    |  | HEADLESS ADK ROUTER      |
+| (dashboard/app.py)       |  | (adk_hybrid_router.py)   |
++--------------------------+  +--------------------------+
+| * Server-Sent Events     |  | * Native Google ADK      |
+| * Real-time UX Streaming |  | * Sequential Pipeline    |
+| * Live Cyberpunk Trace   |  | * Automated CI/CD Grading|
++------------+-------------+  +------------+-------------+
+             |                             |
+             +--------------+--------------+
+                            |
+                            v
++--------------------------------------------------------+
+|           CORE DEVSECOPS RED-TEAMING ENGINE            |
+| Parser -> Modeler (+ MCP Tools) -> Simulator -> HITL   |
++--------------------------------------------------------+
 ```
 
 ---

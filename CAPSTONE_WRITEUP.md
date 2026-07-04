@@ -51,86 +51,89 @@ NexusAudit-Gauntlet utilizes a **Dual-Architecture Design**, providing both a sl
 ### The 4-Agent DevSecOps Red-Teaming Loop (ASCII Architecture Flowchart)
 
 ```
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                 NEXUSAUDIT 4-AGENT RED-TEAMING LOOP                                    │
-└───────────────────────────────────────────────────┬────────────────────────────────────────────────────┘
-                                                    │ [System Specs & Regulatory KB]
-                                                    ▼
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ 1️⃣ POLICY PARSER AGENT (gemini-2.5-flash | Temp: 0.0)                                                  │
-│    • Deconstructs target system instructions against regulatory statutes (EU AI Act, FTC, GDPR, OWASP) │
-│    • Outputs type-safe ClaimSchema isolating exact legal commitments                                   │
-└───────────────────────────────────────────────────┬────────────────────────────────────────────────────┘
-                                                    │ [Compliance Claim]
-                                                    ▼
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ 2️⃣ THREAT MODELER AGENT (gemini-2.5-pro | Temp: 0.4)                                                   │
-│    • Autonomously invokes external tool: search_past_vulnerabilities(policy_id)                        │
-│    • Queries FastMCP server (commerce_policy_kb.json) for historical CVEs & exploit vectors           │
-│    • Formulates adversarial attack hypothesis (ThreatHypothesisSchema)                                 │
-└───────────────────────────────────────────────────┬────────────────────────────────────────────────────┘
-                                                    │ [Threat Hypothesis]
-                                                    ▼
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ 3️⃣ RED-TEAM SIMULATOR AGENT (gemini-2.5-pro | Temp: 0.3)                                               │
-│    • Translates hypothesis into multi-turn attack payload (Base64 encoding, Stored XSS, roleplay)       │
-│    • Dynamically escalates attack complexity to test defense boundaries                                │
-└───────────────────────────────────────────────────┬────────────────────────────────────────────────────┘
-                                                    │ [Adversarial Attack Payload]
-                                                    ▼
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ 🎯 TARGET AI SYSTEM / CHATBOT (gemini-2.5-flash-lite | Temp: 1.0)                                      │
-│    • Simulated corporate chatbot (NovaMart ShopBot, Electronics Assistant, or Care Bot)                │
-│    • Configurable for vulnerable or remediated states across 12 statutory benchmarks                   │
-└───────────────────────────────────────────────────┬────────────────────────────────────────────────────┘
-                                                    │ [Chatbot Defense Output & Conversation Trace]
-                                                    ▼
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ 4️⃣ EVALUATOR JUDGE AGENT (gemini-2.5-pro | Temp: 0.0)                                                  │
-│    • Impartial DevSecOps judge cross-referencing chatbot response against statutory legal text         │
-│    • Renders formal verdict: COMPLIANT, NON_COMPLIANT, or ESCALATE                                     │
-└─────────────────────────┬─────────────────────────────────────────────────┬────────────────────────────┘
-                          │ [Verdict: COMPLIANT]                            │ [Verdict: NON_COMPLIANT]
-                          ▼                                                 ▼
-┌───────────────────────────────────────────────────┐     ┌──────────────────────────────────────────────┐
-│ ✅ AUDIT PASSED                                   │     │ 🛑 HUMAN-IN-THE-LOOP (HITL) GUARDRAIL        │
-│ • Issue Cryptographic Proof Certificate           │     │ • Execution frozen via ADKHumanApprovalNode   │
-│ • Allow CI/CD Pipeline to Proceed                 │     │ • Awaiting DevSecOps Authorization           │
-└───────────────────────────────────────────────────┘     └───────────────────────┬──────────────────────┘
-                                                                                  │ [DevSecOps Approved]
-                                                                                  ▼
-                                                          ┌──────────────────────────────────────────────┐
-                                                          │ 🛠️ AUTO-REMEDIATION SYNTHESIZER              │
-                                                          │ • Generate XML Patch Delimiters              │
-                                                          │ • Output ready-to-merge developer patch      │
-                                                          └──────────────────────────────────────────────┘
++----------------------------------------------------------+
+|            NEXUSAUDIT 4-AGENT RED-TEAMING LOOP           |
++----------------------------------------------------------+
+                             |
+                             v
++----------------------------------------------------------+
+| 1. POLICY PARSER AGENT (gemini-2.5-flash | Temp: 0.0)    |
+|  * Deconstructs bot instructions vs statutory rules      |
+|  * Outputs ClaimSchema isolating exact legal commitments |
++----------------------------------------------------------+
+                             | [Compliance Claim]
+                             v
++----------------------------------------------------------+
+| 2. THREAT MODELER AGENT (gemini-2.5-pro | Temp: 0.4)     |
+|  * Tool: search_past_vulnerabilities(policy_id)          |
+|  * Queries FastMCP KB for historical CVEs & exploits     |
+|  * Formulates attack hypothesis (ThreatHypothesisSchema) |
++----------------------------------------------------------+
+                             | [Threat Hypothesis]
+                             v
++----------------------------------------------------------+
+| 3. RED-TEAM SIMULATOR (gemini-2.5-pro | Temp: 0.3)       |
+|  * Builds multi-turn attack (Base64, Stored XSS, roleplay)|
+|  * Dynamically escalates attack complexity               |
++----------------------------------------------------------+
+                             | [Attack Payload]
+                             v
++----------------------------------------------------------+
+| 4. TARGET AI CHATBOT (gemini-2.5-flash-lite | Temp: 1.0) |
+|  * Simulated bot (ShopBot, Electronics, or Care Bot)     |
+|  * Tested across 12 statutory benchmarks                 |
++----------------------------------------------------------+
+                             | [Bot Defense Output]
+                             v
++----------------------------------------------------------+
+| 5. EVALUATOR JUDGE AGENT (gemini-2.5-pro | Temp: 0.0)    |
+|  * Judges chatbot output against legal standards         |
+|  * Verdict: COMPLIANT, NON_COMPLIANT, or ESCALATE        |
++----------------------------------------------------------+
+               |                            |
+  [COMPLIANT]  |                            | [NON_COMPLIANT]
+               v                            v
++---------------------------+  +---------------------------+
+| ✅ AUDIT PASSED           |  | 🛑 HITL SAFETY GUARDRAIL  |
+| * Issue Proof Certificate |  | * Pipeline frozen by ADK  |
+| * Allow CI/CD to Proceed  |  | * Awaiting Authorization  |
++---------------------------+  +---------------------------+
+                                            |
+                                            v
+                               +---------------------------+
+                               | 🛠️ XML PATCH SYNTHESIZER  |
+                               | * Generates XML Delimiter |
+                               | * Outputs developer patch |
+                               +---------------------------+
 ```
 
 
 ### Dual-Architecture: UI Streaming vs. Headless ADK Execution
 
 ```
-┌───────────────────────────────────────────────────────────────────────────────────┐
-│                           NEXUSAUDIT DUAL-ARCHITECTURE                            │
-└─────────────────────────────────────┬─────────────────────────────────────────────┘
-                                      │
-              ┌───────────────────────┴───────────────────────┐
-              ▼                                               ▼
-┌───────────────────────────┐                   ┌───────────────────────────┐
-│  INTERACTIVE WEB DASHBOARD │                   │   HEADLESS ADK ROUTER     │
-│   (dashboard/app.py)      │                   │ (adk_hybrid_router.py)    │
-├───────────────────────────┤                   ├───────────────────────────┤
-│ • Server-Sent Events (SSE)│                   │ • Native Google ADK       │
-│ • Real-time UX Streaming  │                   │ • SequentialAgent Pipeline│
-│ • Live Cyberpunk Trace UI │                   │ • Automated CI/CD Grading │
-└─────────────┬─────────────┘                   └─────────────┬─────────────┘
-              │                                               │
-              └───────────────────────┬───────────────────────┘
-                                      ▼
-┌───────────────────────────────────────────────────────────────────────────────────┐
-│                     CORE DEVSECOPS RED-TEAMING ENGINE                             │
-│  [Policy Parser] ──► [Threat Modeler + Tools] ──► [Red-Team Simulator] ──► [HITL] │
-└───────────────────────────────────────────────────────────────────────────────────┘
++--------------------------------------------------------+
+|              NEXUSAUDIT DUAL-ARCHITECTURE              |
++---------------------------+----------------------------+
+                            |
+             +--------------+--------------+
+             |                             |
+             v                             v
++--------------------------+  +--------------------------+
+| INTERACTIVE DASHBOARD    |  | HEADLESS ADK ROUTER      |
+| (dashboard/app.py)       |  | (adk_hybrid_router.py)   |
++--------------------------+  +--------------------------+
+| * Server-Sent Events     |  | * Native Google ADK      |
+| * Real-time UX Streaming |  | * Sequential Pipeline    |
+| * Live Cyberpunk Trace   |  | * Automated CI/CD Grading|
++------------+-------------+  +------------+-------------+
+             |                             |
+             +--------------+--------------+
+                            |
+                            v
++--------------------------------------------------------+
+|           CORE DEVSECOPS RED-TEAMING ENGINE            |
+| Parser -> Modeler (+ MCP Tools) -> Simulator -> HITL   |
++--------------------------------------------------------+
 ```
 
 ---
