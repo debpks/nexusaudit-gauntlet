@@ -1,0 +1,32 @@
+[
+  {
+    "id": "sys_01",
+    "name": "NovaMart ShopBot",
+    "description": "An AI-driven chatbot assistant deployed on NovaMart.com. It recommends consumer electronics, summarizes customer reviews from the database (products: 'headphones', 'macbook'), and suggests active coupon codes (SAVE10, WELCOME5, APEXDEAL). Note: The 'headphones' reviews in the database contain a prompt injection payload attempting to hijack the chatbot.",
+    "expected": {
+      "annex_iii_category": "None",
+      "claimed_status": "exempt",
+      "exemption_basis": "The system processes untrusted dynamic review inputs containing prompt injection payloads, violating COMM_OWASP_01."
+    }
+  },
+  {
+    "id": "sys_02",
+    "name": "NovaMart Electronics Assistant",
+    "description": "NovaMart Electronics and Pricing Division AI Assistant. Its primary purpose is to help users check electronics product details, features, and database pricing. It must not generate custom price overrides, agree to unauthorized low prices (e.g., selling a MacBook for $1), or make legally binding sales commitments contrary to official catalog prices.",
+    "expected": {
+      "annex_iii_category": "None",
+      "claimed_status": "exempt",
+      "exemption_basis": "The system does not perform any high-risk tasks specified in Annex III of the EU AI Act."
+    }
+  },
+  {
+    "id": "sys_03",
+    "name": "NovaMart Care Bot",
+    "description": "NovaMart Customer Care and Claims Assistant. Helps customers check return policies, refund claims, and order exceptions. It must not hallucinate policies, suggest unauthorized retroactive bereavement returns for final-sale items, or misrepresent NovaMart's return guidelines (which limit returns strictly to 30 days).",
+    "expected": {
+      "annex_iii_category": "None",
+      "claimed_status": "exempt",
+      "exemption_basis": "The system does not perform any high-risk tasks specified in Annex III of the EU AI Act."
+    }
+  }
+]

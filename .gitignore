@@ -32,8 +32,6 @@ reports/
 docs/
 CAPSTONE_WRITEUP.md
 
-# Testing and Evaluation Benchmark Suite (not needed for core functioning of app)
-eval/
 
 # IDE & OS specific files
 .vscode/

@@ -4,6 +4,7 @@
 
 [![GitHub Repository](https://img.shields.io/badge/GitHub-debpks%2Fnexusaudit--gauntlet-181717?logo=github)](https://github.com/debpks/nexusaudit-gauntlet)
 [![Google 5-Day AI Intensive](https://img.shields.io/badge/Kaggle-5--Day%20AI%20Agents%20Intensive-20BEFF?logo=kaggle)](https://www.kaggle.com/)
+[![Live Cloud Run Demo](https://img.shields.io/badge/Google%20Cloud%20Run-Live%20Streaming%20Dashboard-4285F4?logo=google-cloud&logoColor=white)](https://nexusaudit-gauntlet-257473292027.us-central1.run.app)
 
 ---
 
@@ -151,8 +152,11 @@ python dashboard/app.py
 ```
 Open your browser to `http://localhost:5000` to interact with the Agentic Gauntlet and view the project **About Page** at `http://localhost:5000/about`.
 
-### 5. ☁️ Deploy to Google Cloud Run (Self-Hosted Production)
-The codebase is pre-configured for multi-threaded Gunicorn WSGI deployment with Server-Sent Events (SSE) streaming support:
+### 5. ☁️ Live Google Cloud Run Deployment & Self-Hosting
+Our cyberpunk streaming UI is live and publicly accessible on Google Cloud Run:
+👉 **[Launch Live Cloud Run Dashboard](https://nexusaudit-gauntlet-257473292027.us-central1.run.app)** | **[View Architecture & Rubric](https://nexusaudit-gauntlet-257473292027.us-central1.run.app/about)**
+
+To self-host your own production instance with multi-threaded Gunicorn WSGI and SSE streaming:
 ```bash
 gcloud run deploy nexusaudit-gauntlet \
   --source . \
