@@ -3,7 +3,7 @@
 > **An adversarial multi-agent red-teaming platform that dynamically tests, exploits, and audits Generative AI systems against the EU AI Act, FTC guidelines, and OWASP LLM Top 10 vulnerabilities.**
 
 [![GitHub Repository](https://img.shields.io/badge/GitHub-debpks%2Fnexusaudit--gauntlet-181717?logo=github)](https://github.com/debpks/nexusaudit-gauntlet)
-[![Google 5-Day AI Intensive](https://img.shields.io/badge/Kaggle-5--Day%20AI%20Agents%20Intensive-20BEFF?logo=kaggle)](https://www.kaggle.com/)
+[![Google 5-Day AI Intensive](https://img.shields.io/badge/Kaggle-5--Day%20AI%20Agents%20Intensive-20BEFF?logo=kaggle)](https://www.kaggle.com/code/singhaleo/kaggle-submission)
 [![Live Cloud Run Demo](https://img.shields.io/badge/Google%20Cloud%20Run-Live%20Streaming%20Dashboard-4285F4?logo=google-cloud&logoColor=white)](https://nexusaudit-gauntlet-257473292027.us-central1.run.app)
 
 ![NexusAudit-Gauntlet Hero Banner](https://raw.githubusercontent.com/debpks/nexusaudit-gauntlet/main/assets/nexusaudit_thumbnail_card.jpg)
@@ -146,7 +146,7 @@ export GEMINI_API_KEY="your-gemini-api-key"
 ```
 
 ### 2. ⚡ Kaggle Static & Interactive Notebook Execution (For Course Judges)
-We provide a complete, beautifully formatted Jupyter Notebook ready for Kaggle import: `nexusaudit_gauntlet_kaggle_submission.ipynb`. Simply upload this notebook to Kaggle, configure your `GEMINI_API_KEY` under Kaggle User Secrets, and run all cells!
+We provide our complete, beautifully formatted Jupyter Notebook live on Kaggle: [https://www.kaggle.com/code/singhaleo/kaggle-submission](https://www.kaggle.com/code/singhaleo/kaggle-submission) (and locally via `nexusaudit_gauntlet_kaggle_submission.ipynb`). Simply open the live Kaggle link, configure your `GEMINI_API_KEY` under Kaggle User Secrets, and run all cells!
 
 Alternatively, you can copy & paste our zero-configuration turnkey cell script `kaggle_submission_cell.py` into Cell 1 of any blank notebook or run it locally:
 ```bash
