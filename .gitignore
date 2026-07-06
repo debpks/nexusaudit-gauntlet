@@ -34,10 +34,12 @@ reports/
 docs/
 
 
-# Testing and Evaluation Benchmark Suite (only keep test_systems for UI)
+# Testing and Evaluation Benchmark Suite (only keep test_systems for UI and dropdown benchmark)
 eval/*
 !eval/test_systems/
 !eval/test_systems/*.json
+!eval/eval_all_dropdown_policies.py
+!eval/dropdown_policies_ground_truth.json
 
 # IDE & OS specific files
 .vscode/
