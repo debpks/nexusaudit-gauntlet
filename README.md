@@ -5,6 +5,7 @@
 [![GitHub Repository](https://img.shields.io/badge/GitHub-debpks%2Fnexusaudit--gauntlet-181717?logo=github)](https://github.com/debpks/nexusaudit-gauntlet)
 [![Google 5-Day AI Intensive](https://img.shields.io/badge/Kaggle-5--Day%20AI%20Agents%20Intensive-20BEFF?logo=kaggle)](https://www.kaggle.com/code/singhaleo/kaggle-submission)
 [![Live Cloud Run Demo](https://img.shields.io/badge/Google%20Cloud%20Run-Live%20Streaming%20Dashboard-4285F4?logo=google-cloud&logoColor=white)](https://nexusaudit-gauntlet-257473292027.us-central1.run.app)
+[![YouTube Demo Video](https://img.shields.io/badge/YouTube-Watch%20Live%20Demo-FF0000?logo=youtube&logoColor=white)](https://youtu.be/cCeDdKY-rog)
 
 ![NexusAudit-Gauntlet Hero Banner](https://raw.githubusercontent.com/debpks/nexusaudit-gauntlet/main/assets/nexusaudit_thumbnail_card.jpg)
 
